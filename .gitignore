@@ -1,0 +1,6 @@
+# Compiled Python modules
+*.pyc
+
+# IDE files
+.idea/
+*.iml
