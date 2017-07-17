@@ -1,5 +1,6 @@
 import os
 import random
+import logging
 
 from grid import Grid
 from utilities import manhattan_distance
@@ -102,15 +103,31 @@ class Layout:
         This method modifies coordinates from the input format to a more
         standard (x,y) convention.
         """
+        logging.debug("------")
+        logging.debug("layout.height: %i" % self.height)
+        logging.debug("layout.width: %i" % self.width)
+
         max_y = self.height - 1
 
         for y in range(self.height):
+            logging.debug("------")
             for x in range(self.width):
                 layout_char = layout_text[max_y - y][x]
+                logging.debug("(x: %d, y: %d) || [%d][%d] || %s" % (x, y, x, max_y - y, layout_char))
                 self.process_layout_character(x, y, layout_char)
+            logging.debug("------")
 
         self.agent_positions.sort()
         self.agent_positions = [(i == 0, pos) for i, pos in self.agent_positions]
+
+        logging.debug("Walls:")
+        logging.debug(self.walls)
+        logging.debug("Dots:")
+        logging.debug(self.food)
+        logging.debug("Pellets:")
+        logging.debug(self.capsules)
+        logging.debug("Agents:")
+        logging.debug(self.agent_positions)
 
     def process_layout_character(self, x, y, layout_character):
         """
@@ -135,6 +152,8 @@ class Layout:
 
 
 def get_layout(name, back=2):
+    logging.info("Board Layout Name: " + name)
+
     if name.endswith('.lay'):
         layout = load_layout('layouts/' + name)
         if layout is None:
@@ -150,10 +169,13 @@ def get_layout(name, back=2):
         layout = get_layout(name, back - 1)
         os.chdir(current_directory)
 
+    logging.info("Board Layout:\n%s" % layout)
+
     return layout
 
 
 def load_layout(fullname):
+    logging.debug("Board Layout File Path: " + fullname)
     if not os.path.exists(fullname):
         return None
 
