@@ -34,18 +34,17 @@ class LeftTurnAgent(Agent):
 
 class GreedyAgent(Agent):
     def __init__(self, eval_function="score_evaluation"):
-        self.evaluationFunction = utilities.lookup(eval_function, globals())
-        assert self.evaluationFunction is not None
+        self.evaluation_function = utilities.lookup(eval_function, globals())
+        assert self.evaluation_function is not None
 
     def get_action(self, state):
-        # Generate candidate actions.
         legal = state.get_legal_pacman_actions()
 
         if Direction.STOP in legal:
             legal.remove(Direction.STOP)
 
         successors = [(state.generate_successor(0, action), action) for action in legal]
-        scored = [(self.evaluationFunction(state), action) for state, action in successors]
+        scored = [(self.evaluation_function(state), action) for state, action in successors]
 
         best_score = max(scored)[0]
         best_actions = [pair[1] for pair in scored if pair[0] == best_score]

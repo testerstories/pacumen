@@ -1,25 +1,3 @@
-"""
-This file contains all of the agents that can be selected to control Pacman.  To
-select an agent, use the '-p' option when running pacman.py. Arguments can be
-passed to your agent using '-a'.  For example, to load a SearchAgent that uses
-depth first search (dfs), run the following command:
-
-> python pacman.py -p SearchAgent -a fn=depthFirstSearch
-
-Commands to invoke other search strategies can be found in the project
-description.
-
-Please only change the parts of the file you are asked to.  Look for the lines
-that say
-
-"*** YOUR CODE HERE ***"
-
-The parts you fill in start about 3/4 of the way down.  Follow the project
-description for details.
-
-Good luck and happy searching.
-"""
-
 from game.direction import Direction
 from agent import Agent
 from game.actions import Actions
@@ -30,13 +8,10 @@ import search
 
 class GoWestAgent(Agent):
     """
-    An agent that goes West until it can't.
+    An agent that goes west until it can't.
     """
 
     def get_action(self, state):
-        """
-        The agent receives a GameState (defined in pacman.py).
-        """
         if Direction.WEST in state.get_legal_pacman_actions():
             return Direction.WEST
         else:
@@ -50,24 +25,7 @@ class GoWestAgent(Agent):
 
 
 class SearchAgent(Agent):
-    """
-    This very general search agent finds a path using a supplied search
-    algorithm for a supplied search problem, then returns actions to follow that
-    path.
-
-    As a default, this agent runs DFS on a PositionSearchProblem to find
-    location (1,1)
-
-    Options for fn include:
-      depth_first_search or dfs
-      breadth_first_search or bfs
-
-    Note: You should NOT change any code in SearchAgent
-    """
     def __init__(self, fn='depth_first_search', prob='PositionSearchProblem', heuristic='null_heuristic'):
-        # Warning: some advanced Python magic is employed below to find the
-        # right functions and problems.
-
         # Get the search function from the name and heuristic.
         if fn not in dir(search):
             raise AttributeError(fn + ' is not a search function in search.py.')
@@ -86,11 +44,8 @@ class SearchAgent(Agent):
                 raise AttributeError(heuristic + ' is not a function in agents_search.py or search.py.')
 
             print('[SearchAgent] using function %s and heuristic %s' % (fn, heuristic))
-            # Note: this bit of Python trickery combines the search algorithm
-            # and the heuristic.
             self.search_function = lambda x: func(x, heuristic=heur)
 
-        # Get the search problem type from the name
         if prob not in globals().keys() or not prob.endswith('Problem'):
             raise AttributeError(prob + ' is not a search problem type in agents_search.py.')
 
@@ -102,9 +57,7 @@ class SearchAgent(Agent):
         This is the first time that the agent sees the layout of the game
         board. Here, we choose a path to the goal. In this phase, the agent
         should compute the path to the goal and store it in a local variable.
-        All of the work is done in this method!
-
-        state: a GameState object (pacman.py)
+        All of the work is done in this method.
         """
         if self.search_function is None:
             raise Exception("No search function provided for SearchAgent")
@@ -125,10 +78,9 @@ class SearchAgent(Agent):
 
     def get_action(self, state):
         """
-        Returns the next action in the path chosen earlier (in register_initial_state).
-        Return Directions.STOP if there is no further action to take.
-
-        state: a GameState object (pacman.py)
+        Returns the next action in the path chosen earlier from the
+        register_initial_state method. Will return Directions.STOP
+        if there is no further action to take.
         """
         if 'action_index' not in dir(self):
             self.action_index = 0
@@ -153,7 +105,7 @@ class PositionSearchProblem(search.SearchProblem):
     Note: this search problem is fully specified; you should NOT change it.
     """
 
-    def __init__(self, gameState, costFn=lambda x: 1, goal=(1,1), start=None, warn=True, visualize=True):
+    def __init__(self, game_state, cost_function=lambda x: 1, goal=(1, 1), start=None, warn=True, visualize=True):
         """
         Stores the start and goal.
 
@@ -161,17 +113,17 @@ class PositionSearchProblem(search.SearchProblem):
         costFn: A function from a search state (tuple) to a non-negative number
         goal: A position in the gameState
         """
-        self.walls = gameState.get_walls()
-        self.start_state = gameState.get_pacman_position()
+        self.walls = game_state.get_walls()
+        self.start_state = game_state.get_pacman_position()
 
         if start is not None:
             self.start_state = start
 
         self.goal = goal
-        self.cost_function = costFn
+        self.cost_function = cost_function
 
         self.visualize = visualize
-        if warn and (gameState.get_num_food() != 1 or not gameState.has_food(*goal)):
+        if warn and (game_state.get_num_food() != 1 or not game_state.has_food(*goal)):
             print('Warning: this does not look like a regular search maze')
 
         # For display purposes
@@ -293,7 +245,7 @@ def euclidean_heuristic(position, problem, info={}):
 
 
 #####################################################
-# This portion is incomplete.  Time to write code!  #
+# This portion is incomplete.  Time to write code.  #
 #####################################################
 
 
