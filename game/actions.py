@@ -2,10 +2,7 @@ from direction import Direction
 
 
 class Actions:
-    """
-    A collection of static methods for manipulating move actions.
-    """
-    _directions = {
+    directions = {
         Direction.NORTH: (0, 1),
         Direction.SOUTH: (0, -1),
         Direction.EAST:  (1, 0),
@@ -13,7 +10,7 @@ class Actions:
         Direction.STOP:  (0, 0)
     }
 
-    _directionsAsList = _directions.items()
+    directions_as_list = directions.items()
 
     TOLERANCE = .001
 
@@ -47,7 +44,7 @@ class Actions:
     vector_to_direction = staticmethod(vector_to_direction)
 
     def direction_to_vector(direction, speed=1.0):
-        dx, dy = Actions._directions[direction]
+        dx, dy = Actions.directions[direction]
         return dx * speed, dy * speed
 
     direction_to_vector = staticmethod(direction_to_vector)
@@ -57,11 +54,10 @@ class Actions:
         x, y = config.pos
         x_int, y_int = int(x + 0.5), int(y + 0.5)
 
-        # In between grid points, all agents must continue straight.
         if abs(x - x_int) + abs(y - y_int) > Actions.TOLERANCE:
             return [config.get_direction()]
 
-        for direction, vector in Actions._directionsAsList:
+        for direction, vector in Actions.directions_as_list:
             dx, dy = vector
             next_y = y_int + dy
             next_x = x_int + dx
@@ -77,7 +73,7 @@ class Actions:
         x_int, y_int = int(x + 0.5), int(y + 0.5)
         neighbors = []
 
-        for direction, vector in Actions._directionsAsList:
+        for direction, vector in Actions.directions_as_list:
             dx, dy = vector
             next_x = x_int + dx
 
