@@ -5,13 +5,12 @@ import logging
 from grid import Grid
 from utilities import manhattan_distance
 
+from functools import reduce
+
 VISIBILITY_MATRIX_CACHE = {}
 
 
 class Layout:
-    """
-    A Layout instance manages the static information about the game board.
-    """
     def __init__(self, layout_text):
         self.width = len(layout_text[0])
         self.height = len(layout_text)
@@ -23,36 +22,42 @@ class Layout:
         self.process_layout_text(layout_text)
         self.layout_text = layout_text
         self.total_food = len(self.food.as_list())
-        # self.initializeVisibilityMatrix()
+        # self.initialize_visibility_matrix()
 
     def get_ghost_count(self):
         return self.num_ghosts
 
-    # def initializeVisibilityMatrix(self):
-    #    global VISIBILITY_MATRIX_CACHE
-    #    if reduce(str.__add__, self.layoutText) not in VISIBILITY_MATRIX_CACHE:
-    #        from game import Directions
-    #        vecs = [(-0.5, 0), (0.5, 0), (0, -0.5), (0, 0.5)]
-    #        dirs = [Directions.NORTH, Directions.SOUTH, Directions.WEST, Directions.EAST]
-    #        vis = Grid(self.width, self.height, {
-    #           Directions.NORTH: set(),
-    #           Directions.SOUTH: set(),
-    #           Directions.EAST: set(),
-    #           Directions.WEST: set(),
-    #           Directions.STOP: set()})
-    #        for x in range(self.width):
-    #            for y in range(self.height):
-    #                if self.walls[x][y] is False:
-    #                    for vec, direction in zip(vecs, dirs):
-    #                        dx, dy = vec
-    #                        nextx, nexty = x + dx, y + dy
-    #                        while (nextx + nexty) != int(nextx) + int(nexty) or not self.walls[int(nextx)][int(nexty)]:
-    #                            vis[x][y][direction].add((nextx, nexty))
-    #                            nextx, nexty = x + dx, y + dy
-    #        self.visibility = vis
-    #        VISIBILITY_MATRIX_CACHE[reduce(str.__add__, self.layoutText)] = vis
-    #    else:
-    #        self.visibility = VISIBILITY_MATRIX_CACHE[reduce(str.__add__, self.layoutText)]
+    # The concept of the visibility matrix was in place for a more refined
+    # grid. The current approach simply uses boolean values for any aspect
+    # of the grid. This is currently not being called but the functionality
+    # may be revisited in the future.
+    def initialize_visibility_matrix(self):
+        global VISIBILITY_MATRIX_CACHE
+        if reduce(str.__add__, self.layout_text) not in VISIBILITY_MATRIX_CACHE:
+            from direction import Direction
+            vectors = [(-0.5, 0), (0.5, 0), (0, -0.5), (0, 0.5)]
+            dirs = [Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST]
+            vis = Grid(self.width, self.height, {
+                Direction.NORTH: set(),
+                Direction.SOUTH: set(),
+                Direction.EAST: set(),
+                Direction.WEST: set(),
+                Direction.STOP: set()
+            })
+            for x in range(self.width):
+                for y in range(self.height):
+                    if self.walls[x][y] is False:
+                        for vector, direction in zip(vectors, dirs):
+                            dx, dy = vector
+                            next_x, next_y = x + dx, y + dy
+                            while (next_x + next_y) != int(next_x) + int(next_y)\
+                                    or not self.walls[int(next_x)][int(next_y)]:
+                                vis[x][y][direction].add((next_x, next_y))
+                                next_x, next_y = x + dx, y + dy
+            self.visibility = vis
+            VISIBILITY_MATRIX_CACHE[reduce(str.__add__, self.layout_text)] = vis
+        else:
+            self.visibility = VISIBILITY_MATRIX_CACHE[reduce(str.__add__, self.layout_text)]
 
     def is_wall(self, pos):
         x, col = pos
@@ -88,21 +93,6 @@ class Layout:
         return Layout(self.layout_text[:])
 
     def process_layout_text(self, layout_text):
-        """
-        The layout text provides the overall shape of the maze. Each
-        character in the text represents a different type of object.
-
-        P - Pacman
-        G - Ghost
-        . - Food Dot
-        o - Power Pellet
-        % - Wall
-
-        Any other characters are ignored.
-
-        This method modifies coordinates from the input format to a more
-        standard (x,y) convention.
-        """
         logging.debug("------")
         logging.debug("layout.height: %i" % self.height)
         logging.debug("layout.width: %i" % self.width)
@@ -130,11 +120,6 @@ class Layout:
         logging.debug(self.agent_positions)
 
     def process_layout_character(self, x, y, layout_character):
-        """
-        For each individual character in a layout board, this method will
-        update an appropriate data structure to reflect the presence of
-        that character.
-        """
         if layout_character == '%':
             self.walls[x][y] = True
         elif layout_character == '.':
