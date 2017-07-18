@@ -2,20 +2,17 @@ from utilities import *
 import time
 import traceback
 import sys
+import logging
 
 
 try:
     import boinc
     _BOINC_ENABLED = True
-except:
+except ImportError:
     _BOINC_ENABLED = False
 
 
 class Game:
-    """
-    The Game manages the control flow, soliciting actions from agents.
-    """
-
     def __init__(self, agents, display, rules, starting_index=0, mute_agents=False, catch_exceptions=False):
         self.agentCrashed = False
         self.agents = agents
@@ -26,15 +23,12 @@ class Game:
         self.mute_agents = mute_agents
         self.catch_exceptions = catch_exceptions
         self.move_history = []
-        self.total_agent_times = [0 for agent in agents]
-        self.total_agent_time_warnings = [0 for agent in agents]
+        self.total_agent_times = [0 for _ in agents]
+        self.total_agent_time_warnings = [0 for _ in agents]
         self.agent_timeout = False
 
         from io import StringIO
-        self.agent_output = [StringIO() for agent in agents]
-
-        # import cStringIO
-        # self.agent_output = [cStringIO.StringIO() for agent in agents]
+        self.agent_output = [StringIO() for _ in agents]
 
     def get_progress(self):
         if self.game_over:
@@ -72,24 +66,16 @@ class Game:
         sys.stderr = OLD_STDERR
 
     def run(self):
-        """
-        Main control loop for game play.
-        """
-        # self.state is GameState instance
-        # self.state.data is GameStateData
-
         self.display.initialize(self.state.data)
         self.num_moves = 0
 
         # self.display.initialize(self.state.makeObservation(1).data)
 
-        # inform learning agents of the game start
+        # Inform learning agents of the game start.
         for i in range(len(self.agents)):
             agent = self.agents[i]
             if not agent:
                 self.mute(i)
-                # this is a null agent, meaning it failed to load
-                # the other team wins
                 sys.stderr.write("Agent %d failed to load" % i)
                 self.unmute()
                 self._agent_crash(i, quiet=True)
@@ -99,7 +85,10 @@ class Game:
                 self.mute(i)
                 if self.catch_exceptions:
                     try:
-                        timed_func = TimeoutFunction(agent.register_initial_state, int(self.rules.get_max_startup_time(i)))
+                        timed_func = TimeoutFunction(
+                            agent.register_initial_state,
+                            int(self.rules.get_max_startup_time(i))
+                        )
                         try:
                             start_time = time.time()
                             timed_func(self.state.deep_copy())
@@ -111,31 +100,30 @@ class Game:
                             self.agent_timeout = True
                             self._agent_crash(i, quiet=True)
                             return
-                    except Exception as data:
+                    except Exception:
                         self._agent_crash(i, quiet=False)
                         self.unmute()
                         return
                 else:
                     agent.register_initial_state(self.state.deep_copy())
 
-                ## TODO: could this exceed the total time?
                 self.unmute()
 
         agent_index = self.starting_index
         num_agents = len(self.agents)
 
         while not self.game_over:
-            # Fetch the next agent
+            # Fetch the next agent.
             agent = self.agents[agent_index]
             move_time = 0
             skip_action = False
 
             # Generate an observation of the state.
-            if 'observationFunction' in dir(agent):
+            if 'observation_function' in dir(agent):
                 self.mute(agent_index)
                 if self.catch_exceptions:
                     try:
-                        timed_func = TimeoutFunction(agent.observationFunction, int(self.rules.get_move_timeout(agent_index)))
+                        timed_func = TimeoutFunction(agent.observation_function, int(self.rules.get_move_timeout(agent_index)))
                         try:
                             start_time = time.time()
                             observation = timed_func(self.state.deep_copy())
@@ -143,17 +131,17 @@ class Game:
                             skip_action = True
                         move_time += time.time() - start_time
                         self.unmute()
-                    except Exception as data:
+                    except Exception:
                         self._agent_crash(agent_index, quiet=False)
                         self.unmute()
                         return
                 else:
-                    observation = agent.observationFunction(self.state.deep_copy())
+                    observation = agent.observation_function(self.state.deep_copy())
                 self.unmute()
             else:
                 observation = self.state.deep_copy()
 
-            # Solicit an action
+            # Solicit an action.
             action = None
             self.mute(agent_index)
 
@@ -177,19 +165,25 @@ class Game:
 
                     if move_time > self.rules.get_move_warning_time(agent_index):
                         self.total_agent_time_warnings[agent_index] += 1
-                        sys.stderr.write("Agent %d took too long to make a move! This is warning %d\n" % (agent_index, self.total_agent_time_warnings[agent_index]))
+                        sys.stderr.write("Agent %d took too long to make a move! This is warning %d\n" %
+                                         (agent_index, self.total_agent_time_warnings[agent_index]))
 
                         if self.total_agent_time_warnings[agent_index] > self.rules.get_max_time_warnings(agent_index):
-                            sys.stderr.write("Agent %d exceeded the maximum number of warnings: %d\n" % (agent_index, self.total_agent_time_warnings[agent_index]))
+                            sys.stderr.write("Agent %d exceeded the maximum number of warnings: %d\n" %
+                                             (agent_index, self.total_agent_time_warnings[agent_index]))
                             self.agent_timeout = True
                             self._agent_crash(agent_index, quiet=True)
                             self.unmute()
                             return
 
                     self.total_agent_times[agent_index] += move_time
-                    # print "Agent: %d, time: %f, total: %f" % (agentIndex, move_time, self.totalAgentTimes[agentIndex])
+
+                    logging.debug("Agent: %d, time: %f, total: %f" %
+                                  (agent_index, move_time, self.total_agent_times[agent_index]))
+
                     if self.total_agent_times[agent_index] > self.rules.get_max_total_time(agent_index):
-                        sys.stderr.write("Agent %d ran out of time! (time: %1.2f)\n" % (agent_index, self.total_agent_times[agent_index]))
+                        sys.stderr.write("Agent %d ran out of time! (time: %1.2f)\n" %
+                                         (agent_index, self.total_agent_times[agent_index]))
                         self.agent_timeout = True
                         self._agent_crash(agent_index, quiet=True)
                         self.unmute()
@@ -204,13 +198,13 @@ class Game:
 
             self.unmute()
 
-            # Execute the action
+            # Execute the action.
             self.move_history.append((agent_index, action))
 
             if self.catch_exceptions:
                 try:
                     self.state = self.state.generate_successor(agent_index, action)
-                except Exception as data:
+                except Exception:
                     self.mute(agent_index)
                     self._agent_crash(agent_index)
                     self.unmute()
@@ -218,7 +212,7 @@ class Game:
             else:
                 self.state = self.state.generate_successor(agent_index, action)
 
-            # Change the display
+            # Change the display.
             self.display.update(self.state.data)
 
             # idx = agentIndex - agentIndex % 2 + 1
@@ -237,15 +231,16 @@ class Game:
             if _BOINC_ENABLED:
                 boinc.set_fraction_done(self.get_progress())
 
-        # inform a learning agent of the game result
+        # Inform a learning agent of the game result.
         for agent_index, agent in enumerate(self.agents):
             if "final" in dir(agent):
                 try:
                     self.mute(agent_index)
                     agent.final(self.state)
                     self.unmute()
-                except Exception as data:
-                    if not self.catch_exceptions: raise
+                except Exception:
+                    if not self.catch_exceptions:
+                        raise
                     self._agent_crash(agent_index)
                     self.unmute()
                     return
