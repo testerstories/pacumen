@@ -1,13 +1,4 @@
 class Grid:
-    """
-    A Grid instance represents a two-dimensional array of objects backed
-    by a list of lists. Data is accessed via grid[x][y] where (x,y) are
-    positions on a Pac Man map with x horizontal, y vertical and, most
-    importantly, the origin (0,0) in the bottom left corner.
-
-    The __str__ method constructs an output that is oriented like a pacman
-    board.
-    """
     def __init__(self, width, height, initial_value=False, bit_representation=None):
         if initial_value not in [False, True]:
             raise Exception("Grids can only contain boolean values.")
@@ -16,10 +7,10 @@ class Grid:
 
         self.width = width
         self.height = height
-        self.data = [[initial_value for y in range(height)] for x in range(width)]
+        self.data = [[initial_value for _ in range(height)] for _ in range(width)]
 
         if bit_representation:
-            self._unpack_bits(bit_representation)
+            self.unpack_bits(bit_representation)
 
     def __getitem__(self, i):
         return self.data[i]
@@ -39,7 +30,6 @@ class Grid:
         return self.data == other.data
 
     def __hash__(self):
-        # return hash(str(self))
         base = 1
         h = 0
         for l in self.data:
@@ -66,21 +56,16 @@ class Grid:
         return sum([x.count(item) for x in self.data])
 
     def as_list(self, key=True):
-        list = []
+        grid_list = []
 
         for x in range(self.width):
             for y in range(self.height):
                 if self[x][y] == key:
-                    list.append((x, y))
+                    grid_list.append((x, y))
 
-        return list
+        return grid_list
 
     def pack_bits(self):
-        """
-        Returns an efficient int list representation
-
-        (width, height, bitPackedInts...)
-        """
         bits = [self.width, self.height]
         current_int = 0
 
@@ -102,21 +87,18 @@ class Grid:
         y = index % self.height
         return x, y
 
-    def _unpack_bits(self, bits):
-        """
-        Fills in data from a bit-level representation.
-        """
+    def unpack_bits(self, bits):
         cell = 0
         for packed in bits:
-            for bit in self._unpack_int(packed, self.CELLS_PER_INT):
+            for bit in self.unpack_int(packed, self.CELLS_PER_INT):
                 if cell == self.width * self.height:
                     break
                 x, y = self._cell_index_to_position(cell)
                 self[x][y] = bit
                 cell += 1
 
-    def _unpack_int(self, packed, size):
-        bools = []
+    def unpack_int(self, packed, size):
+        values = []
         if packed < 0:
             raise ValueError("must be a positive integer")
 
@@ -124,12 +106,12 @@ class Grid:
             n = 2 ** (self.CELLS_PER_INT - i - 1)
 
             if packed >= n:
-                bools.append(True)
+                values.append(True)
                 packed -= n
             else:
-                bools.append(False)
+                values.append(False)
 
-        return bools
+        return values
 
 
 def reconstitute_grid(bit_rep):
