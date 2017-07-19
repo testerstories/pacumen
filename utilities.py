@@ -101,15 +101,7 @@ class FixedRandom:
         self.random.setstate(fixed_state)
 
 
-#
-# Data structures useful for implementing search agents.
-#
-
-
 class Stack:
-    """
-    A container with a last-in-first-out (LIFO) queuing policy.
-    """
     def __init__(self):
         self.list = []
 
@@ -124,9 +116,6 @@ class Stack:
 
 
 class Queue:
-    """
-    A container with a first-in-first-out (FIFO) queuing policy.
-    """
     def __init__(self):
         self.list = []
 
@@ -141,12 +130,6 @@ class Queue:
 
 
 class PriorityQueue:
-    """
-    Implements a priority queue data structure. Each inserted item
-    has a priority associated with it and the client is usually interested
-    in quick retrieval of the lowest-priority item in the queue. This
-    data structure allows O(1) access to the lowest-priority item.
-    """
     def __init__(self):
         self.heap = []
         self.count = 0
@@ -164,9 +147,6 @@ class PriorityQueue:
         return len(self.heap) == 0
 
     def update(self, item, priority):
-        # If item already in priority queue with higher priority, update its priority and rebuild the heap.
-        # If item already in priority queue with equal or lower priority, do nothing.
-        # If item not in priority queue, do the same thing as self.push.
         for index, (p, c, i) in enumerate(self.heap):
             if i == item:
                 if p <= priority:
@@ -180,99 +160,29 @@ class PriorityQueue:
 
 
 class PriorityQueueWithFunction(PriorityQueue):
-    """
-    Implements a priority queue with the same push/pop signature of the
-    Queue and the Stack classes. This is designed for drop-in replacement for
-    those two classes. The caller has to provide a priority function, which
-    extracts each item's priority.
-    """
     def __init__(self, priority_function):
         # priorityFunction (item) -> priority"
-        self.priorityFunction = priority_function
+        self.priority_function = priority_function
         PriorityQueue.__init__(self)
 
     def push(self, item):
-        """
-        Adds an item to the queue with priority from the priority function.
-        """
-        PriorityQueue.push(self, item, self.priorityFunction(item))
+        PriorityQueue.push(self, item, self.priority_function(item))
 
 
 def manhattan_distance(xy1, xy2):
-    """
-    Returns the Manhattan distance between points xy1 and xy2.
-    """
     return abs(xy1[0] - xy2[0]) + abs(xy1[1] - xy2[1])
 
 
-#
-# Data structures and functions useful for various course projects
-# The search project should not need anything below this line.
-#
-
-
 class Counter(dict):
-    """
-    A counter keeps track of counts for a set of keys.
-
-    The counter class is an extension of the standard python
-    dictionary type.  It is specialized to have number values
-    (integers or floats), and includes a handful of additional
-    functions to ease the task of counting data.  In particular,
-    all keys are defaulted to have value 0.  Using a dictionary:
-
-    a = {}
-    print a['test']
-
-    would give an error, while the Counter class analogue:
-
-    >>> a = Counter()
-    >>> print(a['test'])
-    0
-
-    returns the default 0 value. Note that to reference a key
-    that you know is contained in the counter,
-    you can still use the dictionary syntax:
-
-    >>> a = Counter()
-    >>> a['test'] = 2
-    >>> print(a['test'])
-    2
-
-    This is very useful for counting things without initializing their counts,
-    see for example:
-
-    >>> a['blah'] += 1
-    >>> print(a['blah'])
-    1
-
-    The counter also includes additional functionality useful in implementing
-    the classifiers for this assignment.  Two counters can be added,
-    subtracted or multiplied together.  See below for details.  They can
-    also be normalized and their total count and arg max can be extracted.
-    """
     def __getitem__(self, idx):
         self.setdefault(idx, 0)
         return dict.__getitem__(self, idx)
 
     def increment_all(self, keys, count):
-        """
-        Increments all elements of keys by the same count.
-
-        >>> a = Counter()
-        >>> a.increment_all(['one','two', 'three'], 1)
-        >>> a['one']
-        1
-        >>> a['two']
-        1
-        """
         for key in keys:
             self[key] += count
 
     def arg_max(self):
-        """
-        Returns the key with the highest value.
-        """
         if len(self.keys()) == 0:
             return None
 
@@ -283,35 +193,15 @@ class Counter(dict):
         return all[max_index][0]
 
     def sorted_keys(self):
-        """
-        Returns a list of keys sorted by their values.  Keys
-        with the highest values will appear first.
-
-        >>> a = Counter()
-        >>> a['first'] = -2
-        >>> a['second'] = 4
-        >>> a['third'] = 1
-        >>> a.sorted_keys()
-        ['second', 'third', 'first']
-        """
         sorted_items = self.items()
         compare = lambda x, y: sign(y[1] - x[1])
         sorted_items.sort(cmp=compare)
         return [x[0] for x in sorted_items]
 
     def total_count(self):
-        """
-        Returns the sum of counts for all keys.
-        """
         return sum(self.values())
 
     def normalize(self):
-        """
-        Edits the counter such that the total count of all
-        keys sums to 1.  The ratio of counts for all keys
-        will remain the same. Note that normalizing an empty
-        Counter will result in an error.
-        """
         total = float(self.total_count())
 
         if total == 0:
@@ -321,35 +211,14 @@ class Counter(dict):
             self[key] = self[key] / total
 
     def divide_all(self, divisor):
-        """
-        Divides all counts by divisor
-        """
         divisor = float(divisor)
         for key in self:
             self[key] /= divisor
 
     def copy(self):
-        """
-        Returns a copy of the counter
-        """
         return Counter(dict.copy(self))
 
     def __mul__(self, y):
-        """
-        Multiplying two counters gives the dot product of their vectors where
-        each unique label is a vector element.
-
-        >>> a = Counter()
-        >>> b = Counter()
-        >>> a['first'] = -2
-        >>> a['second'] = 4
-        >>> b['first'] = 3
-        >>> b['second'] = 5
-        >>> a['third'] = 1.5
-        >>> a['fourth'] = 2.5
-        >>> a * b
-        14
-        """
         sum = 0
         x = self
 
@@ -364,37 +233,10 @@ class Counter(dict):
         return sum
 
     def __radd__(self, y):
-        """
-        Adding another counter to a counter increments the current counter
-        by the values stored in the second counter.
-
-        >>> a = Counter()
-        >>> b = Counter()
-        >>> a['first'] = -2
-        >>> a['second'] = 4
-        >>> b['first'] = 3
-        >>> b['third'] = 1
-        >>> a += b
-        >>> a['first']
-        1
-        """
         for key, value in y.items():
             self[key] += value
 
     def __add__(self, y):
-        """
-        Adding two counters gives a counter with the union of all keys and
-        counts of the second added to counts of the first.
-
-        >>> a = Counter()
-        >>> b = Counter()
-        >>> a['first'] = -2
-        >>> a['second'] = 4
-        >>> b['first'] = 3
-        >>> b['third'] = 1
-        >>> (a + b)['first']
-        1
-        """
         addend = Counter()
 
         for key in self:
@@ -411,19 +253,6 @@ class Counter(dict):
         return addend
 
     def __sub__(self, y):
-        """
-        Subtracting a counter from another gives a counter with the union of
-        all keys and counts of the second subtracted from counts of the first.
-
-        >>> a = Counter()
-        >>> b = Counter()
-        >>> a['first'] = -2
-        >>> a['second'] = 4
-        >>> b['first'] = 3
-        >>> b['third'] = 1
-        >>> (a - b)['first']
-        -5
-        """
         addend = Counter()
         for key in self:
             if key in y:
@@ -449,10 +278,6 @@ def raise_not_defined():
 
 
 def normalize(vector_or_counter):
-    """
-    Normalize a vector or counter by dividing each value by the sum of
-    all values.
-    """
     normalized_counter = Counter()
 
     if type(vector_or_counter) == type(normalized_counter):
@@ -520,10 +345,6 @@ def sample_from_counter(ctr):
 
 
 def get_probability(value, distribution, values):
-    """
-    Gives the probability of a value under a discrete distribution
-    defined by (distributions, values).
-    """
     total = 0.0
     for prob, val in zip(distribution, values):
         if val == value:
@@ -537,9 +358,6 @@ def flip_coin(p):
 
 
 def choose_from_distribution(distribution):
-    """
-    Takes either a counter or a list of (prob, key) pairs and samples.
-    """
     if type(distribution) == dict or type(distribution) == Counter:
         return sample(distribution)
 
@@ -553,9 +371,6 @@ def choose_from_distribution(distribution):
 
 
 def nearest_point(pos):
-    """
-    Finds the nearest grid point to a position.
-    """
     (current_row, current_col) = pos
 
     grid_row = int(current_row + 0.5)
@@ -565,9 +380,6 @@ def nearest_point(pos):
 
 
 def sign(x):
-    """
-    Returns 1 or -1 depending on the sign of x.
-    """
     if x >= 0:
         return 1
     else:
@@ -575,9 +387,6 @@ def sign(x):
 
 
 def array_invert(array):
-    """
-    Inverts a matrix stored as a list of lists.
-    """
     result = [[] for i in array]
 
     for outer in array:
@@ -588,9 +397,6 @@ def array_invert(array):
 
 
 def matrix_as_list(matrix, value=True):
-    """
-    Turns a matrix into a list of coordinates matching the specified value.
-    """
     rows, cols = len(matrix), len(matrix[0])
     cells = []
 
@@ -602,10 +408,6 @@ def matrix_as_list(matrix, value=True):
 
 
 def lookup(name, namespace):
-    """
-    Get a method or class from any imported module from its name.
-    Usage: lookup(functionName, globals())
-    """
     dots = name.count('.')
 
     if dots > 0:
@@ -625,21 +427,22 @@ def lookup(name, namespace):
         raise Exception('%s not found as a method or class' % name)
 
 
+try:
+    input = raw_input
+except NameError:
+    pass
+
+
 def pause():
-    """
-    Pauses the output stream awaiting user feedback.
-    """
     print("<Press enter/return to continue>")
-    raw_input()
+    input()
 
 
-# code to handle timeouts
+# Code to handle timeouts.
 #
-# FIXME
-# NOTE: TimeoutFuncton is NOT reentrant.  Later timeouts will silently
-# disable earlier timeouts.  Could be solved by maintaining a global list
-# of active time outs.  Currently, questions which have test cases calling
-# this have all student code so wrapped.
+# NOTE: THe TimeoutFuncton is NOT reentrant. This means later timeouts will
+# silently disable earlier timeouts. This could be solved by maintaining a
+# global list of active timeouts.
 import signal
 import time
 

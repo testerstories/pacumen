@@ -390,7 +390,7 @@ def move_to(object, x, y=None, d_o_e=lambda arg: _root_window.dooneevent(arg), d
     d_o_e(d_w)
 
 
-def move_by(object, x, y=None, d_o_e=lambda arg: _root_window.dooneevent(arg), d_w=tkDisplay._tkinter.DONT_WAIT):
+def move_by(object, x, y=None, d_o_e=lambda arg: _root_window.dooneevent(arg), d_w=tkDisplay._tkinter.DONT_WAIT, lift=False):
     if y is None:
         try:
             x, y = x
