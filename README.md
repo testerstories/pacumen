@@ -8,9 +8,47 @@ To that end, **Pacumen** is an implementation of the [Pacman AI project](http://
 
 In terms of the Berkeley AI code, it's a bit of a nightmare of poor coding in many ways. My plan is to modify a lot of the existing code to make it more in line with good Python coding practices as well as make it more modular and thus easier to maintain. I've also had to fix a few bugs they had in their code. I have also modified the code to run under Python 2.x and Python 3.x. The complicated parts here were making sure TKinter could work on both.
 
+### Goal
+
+The goal of the project is to use Pac-Man as a problem-solving environment for experiments about general artificial intelligence and learning algorithms.
+
+This is an environment that can easily map onto the general definitions of search problems and decision processes. These are what characterize most approaches to artificial intelligence.
+
+Pac-Man consists of objects moving around on a set of squares that can be modeled as a grid. At any given time Pac-Man occupies a square and faces one of the four directions: north, south, east, or west. There may be walls in between the square or entire squares might be blocked by walls. Regardless, the location of Pac-Man is determined by the x and y coordinates of the grid as such:
+
+![pacumen-grid](http://testerstories.com/files/pacumen/pacumen-grid.png)
+
 ### Usage
 
-A lot more details on this will be coming soon.
+`Pacumen` provides a very basic Pac-Man game. In the game, you control the movements of Pac-Man using arrow keys on your keyboard. You can also use the traditional gamer WASD keys: w (up), s (down), a (left), d (right).
+
+Go ahead and try it.
+
+```
+python pacman.py
+```
+
+The goal of the project is write agent programs to control the actions of Pac-Man. That is, creating a Pac-Man agent. The project enables you to use different environments to try out your Pac-Man agent programs. For example, try these:
+
+```
+python pacman.py --layout test_maze
+```
+
+```
+python pacman.py --layout tiny_maze
+```
+
+You can also vary the scale of the screen by using the "zoom" option as shown below:
+
+```
+python pacman.py --layout tiny_maze --zoom 2
+```
+
+```
+python pacman.py --layout big_maze --zoom 0.5
+```
+
+More instructions about how to utilize the Pacumen context for algorithms will be coming soon.
 
 ### Moving Parts
 
@@ -87,13 +125,17 @@ There are many accessor methods to be aware of.
 
 * get_food: Returns a Grid of boolean food indicator variables. Grids can be accessed via list notation, so to check if there is food at (x,y), just do this:
 
-    `current_food = state.get_food()`
-    `if current_food[x][y] == True: ...`
+```
+current_food = state.get_food()
+if current_food[x][y] == True: ...
+```
 
 get_walls: Returns a Grid of boolean wall indicator variables. Grids can be accessed via list notation, so to check if there is a wall at (x,y), just do this:
 
-    `walls = state.getWalls()`
-    `if walls[x][y] == True: ...`
+```
+walls = state.getWalls()
+if walls[x][y] == True: ...
+```
 
 * has_food: Checks if a given location has food.
 
