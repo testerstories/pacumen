@@ -1,9 +1,10 @@
-from game.direction import Direction
-from agent import Agent
-from game.actions import Actions
-import utilities
 import time
+
 import search
+import utilities
+from game.actions import Actions
+from game.agent import Agent
+from game.direction import Direction
 
 
 class GoWestAgent(Agent):

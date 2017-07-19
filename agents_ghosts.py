@@ -1,8 +1,8 @@
-from agent import Agent
+import utilities
 from game.actions import Actions
+from game.agent import Agent
 from game.direction import Direction
 from utilities import manhattan_distance
-import utilities
 
 
 class GhostAgent(Agent):

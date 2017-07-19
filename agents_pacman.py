@@ -1,7 +1,8 @@
-from game.direction import Direction
-from agent import Agent
 import random
+
 import utilities
+from game.agent import Agent
+from game.direction import Direction
 
 
 class LeftTurnAgent(Agent):

@@ -1,6 +1,6 @@
 import random
 
-from agent import Agent
+from game.agent import Agent
 from game.direction import Direction
 
 
