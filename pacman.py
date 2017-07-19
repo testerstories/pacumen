@@ -11,6 +11,10 @@ import sys
 from game import layout
 from rules.game_rules import GameRules
 
+# Not referenced here; needed if display moves for text
+# display is utilized.
+from utilities import nearest_point
+
 
 def parse_agent_args(arg_string):
     if arg_string is None:
