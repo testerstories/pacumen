@@ -3,10 +3,6 @@ from utilities import nearest_point, manhattan_distance
 
 
 class PacmanRules:
-    """
-    These functions govern how pacman interacts with his environment under
-    the classic game rules.
-    """
     PACMAN_SPEED = 1
 
     # Moves ghosts are scared.
@@ -35,12 +31,12 @@ class PacmanRules:
         vector = Actions.direction_to_vector(action, PacmanRules.PACMAN_SPEED)
         pacman_state.configuration = pacman_state.configuration.generate_successor(vector)
 
-        # Eat
+        # Eat dots.
         next = pacman_state.configuration.get_position()
         nearest = nearest_point(next)
 
         if manhattan_distance(nearest, next) <= 0.5:
-            # Remove food
+            # Remove food when eaten.
             PacmanRules.consume(nearest, state)
 
     apply_action = staticmethod(apply_action)
@@ -48,7 +44,7 @@ class PacmanRules:
     def consume(position, state):
         x, y = position
 
-        # Eat food
+        # Eat food.
         if state.data.food[x][y]:
             state.data.score_change += 10
             state.data.food = state.data.food.copy()
@@ -62,7 +58,7 @@ class PacmanRules:
                 state.data.score_change += 500
                 state.data._win = True
 
-        # Eat capsule
+        # Eat capsule.
         if position in state.get_capsules():
             state.data.capsules.remove(position)
             state.data._capsule_eaten = position

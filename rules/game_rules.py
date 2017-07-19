@@ -3,10 +3,6 @@ from game.game_state import GameState
 
 
 class GameRules:
-    """
-    These game rules manage the control flow of a game, deciding when
-    and how the game starts and ends.
-    """
     def __init__(self, timeout=30):
         self.timeout = timeout
 
@@ -21,9 +17,6 @@ class GameRules:
         return game
 
     def process(self, state, game):
-        """
-        Checks to see whether it is time to end the game.
-        """
         if state.is_win():
             self.win(state, game)
         if state.is_lose():

@@ -4,12 +4,9 @@ from utilities import nearest_point, manhattan_distance
 
 
 class GhostRules:
-    """
-    These functions dictate how ghosts interact with their environment.
-    """
     GHOST_SPEED = 1.0
 
-    # How close ghosts must be to Pacman to kill.
+    # How close ghosts must be to pacman to kill him.
     COLLISION_TOLERANCE = 0.7
 
     def get_legal_actions(state, ghost_index):
