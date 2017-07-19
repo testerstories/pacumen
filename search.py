@@ -15,13 +15,6 @@ class SearchProblem:
         utilities.raise_not_defined()
 
 
-def tiny_maze_search(problem):
-    from game.direction import Direction
-    s = Direction.SOUTH
-    w = Direction.WEST
-    return [s, s, w, s, w, w, s, w]
-
-
 def depth_first_search(problem):
     utilities.raise_not_defined()
 

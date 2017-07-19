@@ -7,27 +7,8 @@ from game.agent import Agent
 from game.direction import Direction
 
 
-class GoWestAgent(Agent):
-    """
-    An agent that goes west until it can't.
-    """
-
-    def get_action(self, state):
-        if Direction.WEST in state.get_legal_pacman_actions():
-            return Direction.WEST
-        else:
-            return Direction.STOP
-
-
-#######################################################
-# This portion is written for you, but will only work #
-#       after you fill in parts of search.py          #
-#######################################################
-
-
 class SearchAgent(Agent):
     def __init__(self, fn='depth_first_search', prob='PositionSearchProblem', heuristic='null_heuristic'):
-        # Get the search function from the name and heuristic.
         if fn not in dir(search):
             raise AttributeError(fn + ' is not a search function in search.py.')
 
@@ -38,14 +19,14 @@ class SearchAgent(Agent):
             self.search_function = func
         else:
             if heuristic in globals().keys():
-                heur = globals()[heuristic]
+                heuristic_name = globals()[heuristic]
             elif heuristic in dir(search):
-                heur = getattr(search, heuristic)
+                heuristic_name = getattr(search, heuristic)
             else:
                 raise AttributeError(heuristic + ' is not a function in agents_search.py or search.py.')
 
             print('[SearchAgent] using function %s and heuristic %s' % (fn, heuristic))
-            self.search_function = lambda x: func(x, heuristic=heur)
+            self.search_function = lambda x: func(x, heuristic=heuristic_name)
 
         if prob not in globals().keys() or not prob.endswith('Problem'):
             raise AttributeError(prob + ' is not a search problem type in agents_search.py.')
@@ -54,21 +35,13 @@ class SearchAgent(Agent):
         print('[SearchAgent] using problem type ' + prob)
 
     def register_initial_state(self, state):
-        """
-        This is the first time that the agent sees the layout of the game
-        board. Here, we choose a path to the goal. In this phase, the agent
-        should compute the path to the goal and store it in a local variable.
-        All of the work is done in this method.
-        """
         if self.search_function is None:
             raise Exception("No search function provided for SearchAgent")
 
         start_time = time.time()
 
-        # Makes a new search problem.
         problem = self.search_type(state)
 
-        # Find a path.
         self.actions = self.search_function(problem)
 
         total_cost = problem.get_cost_of_actions(self.actions)
@@ -78,11 +51,6 @@ class SearchAgent(Agent):
             print('Search nodes expanded: %d' % problem._expanded)
 
     def get_action(self, state):
-        """
-        Returns the next action in the path chosen earlier from the
-        register_initial_state method. Will return Directions.STOP
-        if there is no further action to take.
-        """
         if 'action_index' not in dir(self):
             self.action_index = 0
 
@@ -96,24 +64,7 @@ class SearchAgent(Agent):
 
 
 class PositionSearchProblem(search.SearchProblem):
-    """
-    A search problem defines the state space, start state, goal test, successor
-    function and cost function.  This search problem can be used to find paths
-    to a particular point on the pacman board.
-
-    The state space consists of (x,y) positions in a pacman game.
-
-    Note: this search problem is fully specified; you should NOT change it.
-    """
-
     def __init__(self, game_state, cost_function=lambda x: 1, goal=(1, 1), start=None, warn=True, visualize=True):
-        """
-        Stores the start and goal.
-
-        gameState: A GameState object (pacman.py)
-        costFn: A function from a search state (tuple) to a non-negative number
-        goal: A position in the gameState
-        """
         self.walls = game_state.get_walls()
         self.start_state = game_state.get_pacman_position()
 
@@ -127,36 +78,26 @@ class PositionSearchProblem(search.SearchProblem):
         if warn and (game_state.get_num_food() != 1 or not game_state.has_food(*goal)):
             print('Warning: this does not look like a regular search maze')
 
-        # For display purposes
-        # DO NOT CHANGE
+        # For display purposes; do not change.
         self._visited, self._visitedlist, self._expanded = {}, [], 0
 
     def get_start_state(self):
         return self.start_state
 
     def is_goal_state(self, state):
-        isGoal = state == self.goal
+        is_goal = state == self.goal
 
-        # For display purposes only
-        if isGoal and self.visualize:
+        # For display purposes only; do not change.
+        if is_goal and self.visualize:
             self._visitedlist.append(state)
             import __main__
             if '_display' in dir(__main__):
-                if 'drawExpandedCells' in dir(__main__._display): #@UndefinedVariable
-                    __main__._display.drawExpandedCells(self._visitedlist) #@UndefinedVariable
+                if 'drawExpandedCells' in dir(__main__._display):
+                    __main__._display.drawExpandedCells(self._visitedlist)
 
-        return isGoal
+        return is_goal
 
     def get_successors(self, state):
-        """
-        Returns successor states, the actions they require, and a cost of 1.
-
-        As noted in search.py: for a given state, this should return a list
-        of triples (successor, action, step_cost), where 'successor' is a
-        successor to the current state, 'action' is the action required to
-        get there, and 'step_cost' is the incremental cost of expanding to
-        that successor.
-        """
         successors = []
 
         for action in [Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST]:
@@ -169,8 +110,7 @@ class PositionSearchProblem(search.SearchProblem):
                 cost = self.cost_function(next_state)
                 successors.append((next_state, action, cost))
 
-        # Bookkeeping for display purposes
-        # DO NOT CHANGE
+        # Bookkeeping for display purposes; do not change.
         self._expanded += 1
         if state not in self._visited:
             self._visited[state] = True
@@ -181,7 +121,7 @@ class PositionSearchProblem(search.SearchProblem):
     def get_cost_of_actions(self, actions):
         """
         Returns the cost of a particular sequence of actions. If those actions
-        include an illegal move, return 999999.
+        include an illegal move, return an absurdly large number.
         """
         if actions is None:
             return 999999
@@ -190,7 +130,7 @@ class PositionSearchProblem(search.SearchProblem):
         cost = 0
 
         for action in actions:
-            # Check figure out the next state and see whether its legal.
+            # Figure out the next state and see whether its legal.
             dx, dy = Actions.direction_to_vector(action)
             x, y = int(x + dx), int(y + dy)
 
@@ -274,7 +214,7 @@ class CornersProblem(search.SearchProblem):
         self._expanded = 0
 
         # Please add any code here which you would like to use
-        # in initializing the problem
+        # in initializing the problem.
         "*** YOUR CODE HERE ***"
 
     def get_start_state(self):
@@ -293,15 +233,6 @@ class CornersProblem(search.SearchProblem):
         utilities.raise_not_defined()
 
     def get_successors(self, state):
-        """
-        Returns successor states, the actions they require, and a cost of 1.
-
-        As noted in search.py: for a given state, this should return a list
-        of triples (successor, action, step_cost), where 'successor' is a
-        successor to the current state, 'action' is the action required to
-        get there, and 'step_cost' is the incremental cost of expanding to
-        that successor.
-        """
         successors = []
 
         for action in [Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST]:
@@ -314,7 +245,7 @@ class CornersProblem(search.SearchProblem):
             #   hitsWall = self.walls[next_x][next_y]
             "*** YOUR CODE HERE ***"
 
-        # DO NOT CHANGE
+        # Do not change this.
         self._expanded += 1
         return successors
 
