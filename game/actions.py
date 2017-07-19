@@ -1,4 +1,4 @@
-from direction import Direction
+from .direction import Direction
 
 
 class Actions:

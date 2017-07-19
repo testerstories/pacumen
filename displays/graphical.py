@@ -1,6 +1,6 @@
 from __future__ import print_function
 
-from graphical_board import *
+from .graphical_board import *
 import math, time, os
 from game.direction import Direction
 

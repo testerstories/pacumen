@@ -1,4 +1,4 @@
-from game_state_data import GameStateData
+from .game_state_data import GameStateData
 
 from rules.pacman_rules import PacmanRules
 from rules.ghost_rules import GhostRules

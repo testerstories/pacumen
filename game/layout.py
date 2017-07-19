@@ -2,7 +2,7 @@ import os
 import random
 import logging
 
-from grid import Grid
+from .grid import Grid
 from utilities import manhattan_distance
 
 from functools import reduce

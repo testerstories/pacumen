@@ -1,7 +1,7 @@
-from configuration import Configuration
-from agent_state import AgentState
-from grid import reconstitute_grid, Grid
-from direction import Direction
+from .configuration import Configuration
+from .agent_state import AgentState
+from .grid import reconstitute_grid, Grid
+from .direction import Direction
 from utilities import nearest_point
 
 

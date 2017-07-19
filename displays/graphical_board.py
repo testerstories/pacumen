@@ -3,7 +3,7 @@ import time
 import Tkinter
 import os.path
 
-from graphical_helpers import format_color
+from .graphical_helpers import format_color
 
 _Windows = sys.platform == 'win32'
 

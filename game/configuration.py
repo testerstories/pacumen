@@ -1,5 +1,5 @@
-from direction import Direction
-from actions import Actions
+from .direction import Direction
+from .actions import Actions
 
 
 class Configuration:
