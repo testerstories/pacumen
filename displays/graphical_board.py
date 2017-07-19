@@ -1,6 +1,11 @@
 import sys
 import time
-import Tkinter
+
+try:
+    import Tkinter as tkDisplay
+except ImportError:
+    import tkinter as tkDisplay
+
 import os.path
 
 from .graphical_helpers import format_color
@@ -59,14 +64,14 @@ def begin_graphics(width=640, height=480, color=format_color(0, 0, 0), title=Non
     _bg_color = color
 
     # Create the root window.
-    _root_window = Tkinter.Tk()
+    _root_window = tkDisplay.Tk()
     _root_window.protocol('WM_DELETE_WINDOW', _destroy_window)
     _root_window.title(title or "Pac-Man Graphical Display")
     _root_window.resizable(0, 0)
 
     # Create the canvas object.
     try:
-        _canvas = Tkinter.Canvas(_root_window, width=width, height=height)
+        _canvas = tkDisplay.Canvas(_root_window, width=width, height=height)
         _canvas.pack()
         draw_background()
         _canvas.update()
@@ -208,7 +213,7 @@ def circle(pos, r, outline_color, fill_color, endpoints=None, style='pieslice', 
 def image(pos, file="../../blueghost.gif"):
     x, y = pos
     # img = PhotoImage(file=file)
-    return _canvas.create_image(x, y, image=Tkinter.PhotoImage(file=file), anchor=Tkinter.NW)
+    return _canvas.create_image(x, y, image=tkDisplay.PhotoImage(file=file), anchor=tkDisplay.NW)
 
 
 def refresh():
@@ -280,10 +285,10 @@ _got_release = None
 
 def _keypress(event):
     global _got_release
-    #remap_arrows(event)
+    # remap_arrows(event)
     _keysdown[event.keysym] = 1
     _keyswaiting[event.keysym] = 1
-    #    print event.char, event.keycode
+    # print event.char, event.keycode
     _got_release = None
 
 
@@ -322,7 +327,7 @@ def _clear_keys(event=None):
     _got_release = None
 
 
-def keys_pressed(d_o_e=Tkinter.tkinter.dooneevent, d_w=Tkinter.tkinter.DONT_WAIT):
+def keys_pressed(d_o_e=lambda arg: _root_window.dooneevent(arg), d_w=tkDisplay._tkinter.DONT_WAIT):
     d_o_e(d_w)
     if _got_release:
         d_o_e(d_w)
@@ -346,7 +351,7 @@ def wait_for_keys():
     return keys
 
 
-def remove_from_screen(x, d_o_e=Tkinter.tkinter.dooneevent, d_w=Tkinter.tkinter.DONT_WAIT):
+def remove_from_screen(x, d_o_e=lambda arg: _root_window.dooneevent(arg), d_w=tkDisplay._tkinter.DONT_WAIT):
     _canvas.delete(x)
     d_o_e(d_w)
 
@@ -359,7 +364,7 @@ def _adjust_coords(coord_list, x, y):
     return coord_list
 
 
-def move_to(object, x, y=None, d_o_e=Tkinter.tkinter.dooneevent, d_w=Tkinter.tkinter.DONT_WAIT):
+def move_to(object, x, y=None, d_o_e=lambda arg: _root_window.dooneevent(arg), d_w=tkDisplay._tkinter.DONT_WAIT):
     if y is None:
         try:
             x, y = x
@@ -385,7 +390,7 @@ def move_to(object, x, y=None, d_o_e=Tkinter.tkinter.dooneevent, d_w=Tkinter.tki
     d_o_e(d_w)
 
 
-def move_by(object, x, y=None, d_o_e=Tkinter.tkinter.dooneevent, d_w=Tkinter.tkinter.DONT_WAIT, lift=False):
+def move_by(object, x, y=None, d_o_e=lambda arg: _root_window.dooneevent(arg), d_w=tkDisplay._tkinter.DONT_WAIT):
     if y is None:
         try:
             x, y = x

@@ -4,7 +4,7 @@ from .graphical_board import *
 import math, time, os
 from game.direction import Direction
 
-from graphical_helpers import color_to_vector, add
+from .graphical_helpers import color_to_vector, add
 
 DEFAULT_GRID_SIZE = 30.0
 INFO_PANE_HEIGHT = 35
