@@ -175,11 +175,15 @@ def process_commands(argv):
     # Special case: recorded games don't use the run_game method or args structure.
     if options.gameToReplay is not None:
         print('Replaying recorded game %s.' % options.gameToReplay)
-        import cPickle
+        try:
+            import cPickle as pickle
+        except ImportError:
+            import _pickle as pickle
+
         f = open(options.gameToReplay)
 
         try:
-            recorded = cPickle.load(f)
+            recorded = pickle.load(f)
         finally:
             f.close()
 
@@ -263,11 +267,16 @@ def run_game(layout, pacman, ghosts, display, numGames, record, numTraining=0, c
             games.append(game)
 
         if record:
-            import time, cPickle
+            import time
+            try:
+                import cPickle as pickle
+            except ImportError:
+                import _pickle as pickle
+
             fname = ('recorded-game-%d' % (i + 1)) + '-'.join([str(t) for t in time.localtime()[1:6]])
-            f = open(fname, 'w')
+            f = open(fname, 'wb')
             components = {'layout': layout, 'actions': game.move_history}
-            cPickle.dump(components, f)
+            pickle.dump(components, f)
             f.close()
 
     if (numGames - numTraining) > 0:
