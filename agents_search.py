@@ -191,12 +191,6 @@ def euclidean_heuristic(position, problem, info={}):
 
 
 class CornersProblem(search.SearchProblem):
-    """
-    This search problem finds paths through all four corners of a layout.
-
-    You must select a suitable state space and successor function.
-    """
-
     def __init__(self, starting_game_state):
         """
         Stores the walls, pacman's starting position and corners.
@@ -210,7 +204,7 @@ class CornersProblem(search.SearchProblem):
             if not starting_game_state.has_food(*corner):
                 print('Warning: no food in corner ' + str(corner))
 
-        # DO NOT CHANGE; Number of search nodes expanded
+        # DO NOT CHANGE; Number of search nodes expanded.
         self._expanded = 0
 
         # Please add any code here which you would like to use
@@ -218,17 +212,10 @@ class CornersProblem(search.SearchProblem):
         "*** YOUR CODE HERE ***"
 
     def get_start_state(self):
-        """
-        Returns the start state (in your state space, not the full Pac-Man
-        state space).
-        """
         "*** YOUR CODE HERE ***"
         utilities.raise_not_defined()
 
     def is_goal_state(self, state):
-        """
-        Returns whether this search state is a goal state of the problem.
-        """
         "*** YOUR CODE HERE ***"
         utilities.raise_not_defined()
 
@@ -241,8 +228,8 @@ class CornersProblem(search.SearchProblem):
             # a wall:
             #   x,y = currentPosition
             #   dx, dy = Actions.direction_to_vector(action)
-            #   next_xx, next_y = int(x + dx), int(y + dy)
-            #   hitsWall = self.walls[next_x][next_y]
+            #   next_x, next_y = int(x + dx), int(y + dy)
+            #   hits_wall = self.walls[next_x][next_y]
             "*** YOUR CODE HERE ***"
 
         # Do not change this.
@@ -288,7 +275,7 @@ def corners_heuristic(state, problem):
     walls = problem.walls
 
     "*** YOUR CODE HERE ***"
-    # Default to trivial solution
+    # Default to trivial solution.
     return 0
 
 
@@ -332,7 +319,7 @@ class FoodSearchProblem:
         Returns successor states, the actions they require, and a cost of 1.
         """
         successors = []
-        # DO NOT CHANGE
+        # DO NOT CHANGE.
         self._expanded += 1
 
         for direction in [Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST]:
@@ -380,9 +367,9 @@ def food_heuristic(state, problem):
     """
     Your heuristic for the FoodSearchProblem goes here.
 
-    This heuristic must be consistent to ensure correctness.  First, try to come
-    up with an admissible heuristic; almost all admissible heuristics will be
-    consistent as well.
+    This heuristic must be consistent to ensure correctness. First, try to
+    come up with an admissible heuristic; almost all admissible heuristics
+    will be consistent as well.
 
     If using A* ever finds a solution that is worse uniform cost search finds,
     your heuristic is *not* consistent, and probably not admissible!  On the
@@ -390,8 +377,8 @@ def food_heuristic(state, problem):
     solutions, so be careful.
 
     The state is a tuple ( pacmanPosition, foodGrid ) where foodGrid is a Grid
-    (see game.py) of either True or False. You can call foodGrid.asList() to get
-    a list of food coordinates instead.
+    (see game.py) of either True or False. You can call foodGrid.asList() to
+    get a list of food coordinates instead.
 
     If you want access to info like walls, capsules, etc., you can query the
     problem.  For example, problem.walls gives you a Grid of where the walls
@@ -436,7 +423,7 @@ class ClosestDotSearchAgent(SearchAgent):
     def find_path_to_closest_dot(self, game_state):
         """
         Returns a path (a list of actions) to the closest dot, starting from
-        gameState.
+        game state.
         """
         # Here are some useful elements of the start_state.
         start_position = game_state.get_pacman_position()
@@ -465,7 +452,7 @@ class AnyFoodSearchProblem(PositionSearchProblem):
 
     def __init__(self, game_state):
         """
-        Stores information from the gameState. You don't need to change this.
+        Stores information from the game state. You don't need to change this.
         """
         # Store the food for later reference.
         self.food = game_state.get_food()
@@ -474,13 +461,13 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         self.walls = game_state.get_walls()
         self.start_state = game_state.get_pacman_position()
         self.cost_function = lambda x: 1
-        # DO NOT CHANGE
+        # For display purposes; do not change.
         self._visited, self._visitedlist, self._expanded = {}, [], 0
 
     def is_goal_state(self, state):
         """
-        The state is Pac-Man's position. Fill this in with a goal test that
-        will complete the problem definition.
+        The state is pacman's position. You would fill this in with a goal
+        test that will complete the problem definition.
         """
         x, y = state
 
@@ -491,12 +478,12 @@ class AnyFoodSearchProblem(PositionSearchProblem):
 def maze_distance(point1, point2, game_state):
     """
     Returns the maze distance between any two points, using the search functions
-    you have already built. The gameState can be any game state -- Pacman's
+    you have already built. The game state can be any game state -- pacman's
     position in that state is ignored.
 
-    Example usage: mazeDistance( (2,4), (5,6), gameState)
+    Example usage: maze_distance( (2,4), (5,6), game_state)
 
-    This might be a useful helper function for your ApproximateSearchAgent.
+    This might be a useful helper function for an ApproximateSearchAgent.
     """
     x1, y1 = point1
     x2, y2 = point2
