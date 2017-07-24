@@ -1,3 +1,4 @@
+import sys
 import time
 
 import search
@@ -14,7 +15,12 @@ class SearchAgent(Agent):
 
         func = getattr(search, fn)
 
-        if 'heuristic' not in func.func_code.co_varnames:
+        if sys.version_info >= (3,0):
+            functional = func.__code__.co_varnames
+        else:
+            functional = func.func_code.co_varnames
+
+        if 'heuristic' not in functional:
             print('[SearchAgent] using function ' + fn)
             self.search_function = func
         else:
