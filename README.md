@@ -50,7 +50,86 @@ python pacman.py --layout big_maze --zoom 0.5
 
 More instructions about how to utilize the Pacumen context for algorithms will be coming soon.
 
+### Searching Algorithms
+
+Before an agent can begin to make decisions, it needs to find the best/correct answer to the question/problem it's trying to solve. The first part is done with search algorithms. The problems are presented in the form of a game board.
+
+You must implement generic search algorithms that will be called by pacman agents. These algorithms will go in the `search.py` file. In that file, there are methods put in place for you as placeholders:
+
+* depth_first_search()
+* breadth_first_search()
+* uniform_cost_search()
+* astar_search()
+
+Aliases for these are dfs(), bfs(), ucs(), and astar().
+
+These algorithms will be passed in as the search function to be used by the search agent.
+
+You can create your own search agents but the basis of one is already in place for you. This is called `SearchAgent` and is in the `agents_search.py` file. This is a very general search agent that finds a path through the maze. It does so using a **supplied search algorithm** for a **supplied search problem** and using a **supplied heuristic**.
+
+By default, a SearchAgent tries to run a "depth first search" on a "position search problem" and uses a "null heuristic".
+
+A **heuristic function** estimates the cost from the current state to the nearest goal in the provided SearchProblem. A null heuristic always returns a value of 0, which is a trivial heuristic stating that there is no cost.
+
+#### SearchAgents are Agents
+
+To see how this works, understand that a SearchAgent is a specific kind of generic `Agent`.
+
+* Any agent must define a `get_action()` method. This method receives a GameState and must return a direction constant, such as Direction.NORTH or Direction.WEST.
+
+* Further, an agent can define a `register_initial_state()` method and that will be called if it exists. This method is used to inspect the starting state.
+
+Let's consider how these work in a basic SearchAgent.
+
+* The register_initial_state() method is called and this is the first time that the agent sees the layout of the game board. In SearchAgent, this method chooses a path to the goal. In this phase, the agent should compute the path to the goal and store this information. An actions variable is used to store the path (which is found by calling the search algorithm/function on the search problem). A total_cost variable stores the total cost of all those actions.
+
+* The get_action() method returns the next action in the path chosen in register_initial_state(). The method will return Direction.STOP if there is no further action to take.
+
+#### PositionSearchProblems are SearchProblems
+
+A `PositionSearchProblem` (which is a specific kind of generic `SearchProblem`) can be used to find paths to a point on the pacman board. By default, this problem has been fully specified and finds location (1, 1). A generic SearchProblem outlines the structure of a search problem. Specifically, a search problem defines the state space, start state, goal test, successor function and cost function. Keep in mind that the state space consists of (x, y) positions in a pacman game.
+
+Any search problem must provide the following elements:
+
+* A `get_start_state()` method, which returns the start state for the search problem.
+
+* An `is_goal_state()` method is also required. This method should return True if and only if the state is a valid goal state.
+
+* A `get_successors()` method is required. For a given state, this method should return a list of triples: successor, action, and step cost. Here 'successor' is a successor to the current state, 'action' is the action required to get to that successor state, and 'step cost' is the incremental cost of expanding to that successor.
+
+* A `get_cost_of_actions()` method must be provided. This method returns the total cost of a sequence of actions. The sequence must be composed of legal moves.
+
+Let's consider how these work in the context of PositionSearchProblem.
+
+* The get_start_start() method will simply return the starting state, which is basically the position where the pacman agent starts, as determined by the layout.
+
+* The is_goal_state() method checks if the current state matches the goal state. The goal state is defined by the problem and for PositionSearchProblem the default goal state is (1,1).
+
+* The get_successors() method returns successor states, the actions they require, and a cost that is defined by the problem. For PositionSearchProblem, the cost function is by default 1.
+
+* The get_cost_of_actions() method returns the cost of a particular sequence of actions, simply by incrementing the cost based on the cost function. So, in this case, every action has a cost of 1. If the sequence of actions includes an illegal move, this method returns 999999.
+
+#### Execution of Search Problems
+
+You can run the generic search agent like this:
+
+    python pacman.py --layout tiny_maze --pacman SearchAgent
+
+However, unless you have created a depth first search function, which is the default, you will see something like this:
+
+    [SearchAgent] using function depth_first_search
+    [SearchAgent] using problem type PositionSearchProblem
+    *** Method not implemented: depth_first_search
+
+The above command is identical to doing this:
+
+    python pacman.py --layout tiny_maze --pacman SearchAgent -a fn=dfs
+
+Here I’m just passing in the name of the search function, in this case "dfs". I could have also said "depth_first_search". Whatever you type here must be a function that you have provided.
+
 ### Moving Parts
+
+Everything in this section is likely to be modified or consolidated at some point in the future. It's all accurate, but not presented in the best format.
 
 #### Agents
 
