@@ -92,7 +92,7 @@ def process_commands(argv):
                         metavar="GAMES",
                         help="the number of GAMES to play (default %(default)s)")
 
-    parser.add_argument("-k", "--numghosts", dest="numGhosts", type=int, default=4,
+    parser.add_argument("-k", "--numGhosts", dest="numGhosts", type=int, default=4,
                         help="the maximum number of ghosts to use (default %(default)s)")
 
     parser.add_argument("-x", "--numTraining", dest="numTraining", type=int, default=0,
