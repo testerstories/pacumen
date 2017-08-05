@@ -6,8 +6,6 @@ try:
 except ImportError:
     import tkinter as tkDisplay
 
-import os.path
-
 from .graphical_helpers import format_color
 
 _Windows = sys.platform == 'win32'
@@ -140,9 +138,6 @@ def draw_background():
 
 def _destroy_window(event=None):
     sys.exit(0)
-#    global _root_window
-#    _root_window.destroy()
-#    _root_window = None
 
 
 def end_graphics():
@@ -212,7 +207,6 @@ def circle(pos, r, outline_color, fill_color, endpoints=None, style='pieslice', 
 
 def image(pos, file="../../blueghost.gif"):
     x, y = pos
-    # img = PhotoImage(file=file)
     return _canvas.create_image(x, y, image=tkDisplay.PhotoImage(file=file), anchor=tkDisplay.NW)
 
 
@@ -235,10 +229,7 @@ def move_circle(id, pos, r, endpoints=None):
     while e[0] > e[1]:
         e[1] = e[1] + 360
 
-    if os.path.isfile('flag'):
-        edit(id, ('extent', e[1] - e[0]))
-    else:
-        edit(id, ('start', e[0]), ('extent', e[1] - e[0]))
+    edit(id, ('start', e[0]), ('extent', e[1] - e[0]))
 
     move_to(id, x0, y0)
 
@@ -303,11 +294,11 @@ def _keyrelease(event):
 
 
 def remap_arrows(event):
-    # TURN ARROW PRESSES INTO LETTERS (SHOULD BE IN KEYBOARD AGENT)
+    # Turn arrow presses into letters.
     if event.char in ['a', 's', 'd', 'w']:
         return
     if event.keycode in [37, 101]:
-        # LEFT ARROW (win / x)
+        # LEFT ARROW
         event.char = 'a'
     if event.keycode in [38, 99]:
         # UP ARROW
@@ -372,7 +363,7 @@ def move_to(object, x, y=None, d_o_e=lambda arg: _root_window.dooneevent(arg), d
             raise Exception('incomprehensible coordinates')
 
     horiz = True
-    newCoords = []
+    new_coords = []
 
     current_x, current_y = _canvas.coords(object)[0:2]
 
@@ -384,9 +375,9 @@ def move_to(object, x, y=None, d_o_e=lambda arg: _root_window.dooneevent(arg), d
 
         horiz = not horiz
 
-        newCoords.append(coord + inc)
+        new_coords.append(coord + inc)
 
-    _canvas.coords(object, *newCoords)
+    _canvas.coords(object, *new_coords)
     d_o_e(d_w)
 
 
