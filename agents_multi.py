@@ -22,7 +22,7 @@ class ReflexAgent(Agent):
     def evaluation_function(self, current_game_state, action):
         successor_game_state = current_game_state.generate_pacman_successor(action)
         new_pos = successor_game_state.get_pacman_position()
-        new_food = successor_game_state.get_good()
+        new_food = successor_game_state.get_food()
         new_ghost_states = successor_game_state.get_ghost_states()
         new_scared_times = [ghost_state.scared_timer for ghost_state in new_ghost_states]
 
