@@ -15,7 +15,7 @@ class SearchAgent(Agent):
 
         func = getattr(search, fn)
 
-        if sys.version_info >= (3,0):
+        if sys.version_info >= (3, 0):
             functional = func.__code__.co_varnames
         else:
             functional = func.func_code.co_varnames
@@ -84,7 +84,7 @@ class PositionSearchProblem(search.SearchProblem):
         if warn and (game_state.get_num_food() != 1 or not game_state.has_food(*goal)):
             print('Warning: this does not look like a regular search maze')
 
-        self._visited, self._visitedlist, self._expanded = {}, [], 0
+        self._visited, self._visited_list, self._expanded = {}, [], 0
 
     def get_start_state(self):
         return self.start_state
@@ -93,11 +93,11 @@ class PositionSearchProblem(search.SearchProblem):
         is_goal = state == self.goal
 
         if is_goal and self.visualize:
-            self._visitedlist.append(state)
+            self._visited_list.append(state)
             import __main__
             if '_display' in dir(__main__):
-                if 'drawExpandedCells' in dir(__main__._display):
-                    __main__._display.drawExpandedCells(self._visitedlist)
+                if 'draw_expanded_cells' in dir(__main__._display):
+                    __main__._display.draw_expanded_cells(self._visited_list)
 
         return is_goal
 
@@ -117,7 +117,7 @@ class PositionSearchProblem(search.SearchProblem):
         self._expanded += 1
         if state not in self._visited:
             self._visited[state] = True
-            self._visitedlist.append(state)
+            self._visited_list.append(state)
 
         return successors
 
@@ -125,7 +125,7 @@ class PositionSearchProblem(search.SearchProblem):
         if actions is None:
             return 999999
 
-        x,y= self.get_start_state()
+        x, y = self.get_start_state()
         cost = 0
 
         for action in actions:
@@ -280,7 +280,7 @@ class FoodSearchProblem:
         return successors
 
     def get_cost_of_actions(self, actions):
-        x,y = self.get_start_state()[0]
+        x, y = self.get_start_state()[0]
         cost = 0
 
         for action in actions:

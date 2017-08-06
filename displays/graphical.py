@@ -644,27 +644,27 @@ class PacmanDisplay:
         x, y = cell
         remove_from_screen(capsule_images[(x, y)])
 
-    def drawExpandedCells(self, cells):
+    def draw_expanded_cells(self, cells):
         """
         Draws an overlay of expanded grid positions for search agents
         """
         n = float(len(cells))
         base_color = [1.0, 0.0, 0.0]
-        self.clearExpandedCells()
-        self.expandedCells = []
+        self.clear_expanded_cells()
+        self.expanded_cells = []
 
         for k, cell in enumerate(cells):
             screen_pos = self.to_screen(cell)
             cell_color = format_color(*[(n - k) * c * .5 / n + .25 for c in base_color])
             block = square(screen_pos, 0.5 * self.grid_size, color=cell_color, filled=1, behind=2)
-            self.expandedCells.append(block)
+            self.expanded_cells.append(block)
 
             if self.frame_time < 0:
                 refresh()
 
-    def clearExpandedCells(self):
-        if 'expandedCells' in dir(self) and len(self.expandedCells) > 0:
-            for cell in self.expandedCells:
+    def clear_expanded_cells(self):
+        if 'expanded_cells' in dir(self) and len(self.expanded_cells) > 0:
+            for cell in self.expanded_cells:
                 remove_from_screen(cell)
 
     def update_distributions(self, distributions):
