@@ -2,7 +2,8 @@ from __future__ import print_function
 
 import sys
 import inspect
-import heapq, random
+import heapq
+import random
 
 
 class FixedRandom:
@@ -186,11 +187,11 @@ class Counter(dict):
         if len(self.keys()) == 0:
             return None
 
-        all = self.items()
-        values = [x[1] for x in all]
+        all_items = self.items()
+        values = [x[1] for x in all_items]
         max_index = values.index(max(values))
 
-        return all[max_index][0]
+        return all_items[max_index][0]
 
     def sorted_keys(self):
         sorted_items = self.items()
@@ -219,7 +220,7 @@ class Counter(dict):
         return Counter(dict.copy(self))
 
     def __mul__(self, y):
-        sum = 0
+        sum_value = 0
         x = self
 
         if len(x) > len(y):
@@ -228,9 +229,9 @@ class Counter(dict):
         for key in x:
             if key not in y:
                 continue
-            sum += x[key] * y[key]
+            sum_value += x[key] * y[key]
 
-        return sum
+        return sum_value
 
     def __radd__(self, y):
         for key, value in y.items():
@@ -304,7 +305,7 @@ def n_sample(distribution, values, n):
     if sum(distribution) != 1:
         distribution = normalize(distribution)
 
-    rand = [random.random() for i in range(n)]
+    rand = [random.random() for _ in range(n)]
     rand.sort()
     samples = []
     sample_pos, dist_pos, cdf = 0, 0, distribution[0]
@@ -387,7 +388,7 @@ def sign(x):
 
 
 def array_invert(array):
-    result = [[] for i in array]
+    result = [[] for _ in array]
 
     for outer in array:
         for inner in range(len(outer)):

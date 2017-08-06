@@ -11,7 +11,7 @@ import sys
 from game import layout
 from rules.game_rules import GameRules
 
-# Not referenced here; needed if display moves for text
+# Not referenced here; needed if "display moves" for text
 # display is utilized.
 from utilities import nearest_point
 
@@ -117,7 +117,7 @@ def process_commands(argv):
 
     parser.add_argument("-c", "--catchExceptions", dest='catchExceptions', default=False,
                         action='store_true',
-                        help="Turns on exception handling and timeouts during games (default %(default)s)")
+                        help="turns on exception handling and timeouts during games (default %(default)s)")
 
     options = parser.parse_args(argv)
 
@@ -224,7 +224,9 @@ def load_agent(pacman, no_graphics):
 
 
 def replay_game(layout, actions, display):
-    import agents_pacman, agents_ghosts
+    import agents_pacman
+    import agents_ghosts
+
     rules = GameRules()
     agents = [agents_pacman.GreedyAgent()] + [agents_ghosts.RandomGhost(i + 1) for i in range(layout.get_ghost_count())]
     game = rules.new_game(layout, agents[0], agents[1:], display)

@@ -154,7 +154,7 @@ class EightPuzzleState:
     def __hash__(self):
         return hash(str(self.cells))
 
-    def __getAsciiString(self):
+    def __get_ascii_string(self):
         """
         Returns a display string for the maze
         """
@@ -174,10 +174,10 @@ class EightPuzzleState:
         return '\n'.join(lines)
 
     def __str__(self):
-        return self.__getAsciiString()
+        return self.__get_ascii_string()
 
 
-# TODO: Implement The methods in this class
+# TODO: Implement the methods in this class.
 
 class EightPuzzleSearchProblem(search.SearchProblem):
     """
@@ -264,13 +264,12 @@ def create_random_eight_puzzle(moves=100):
 
     return puzzle
 
-
-try:
-    input = raw_input
-except NameError:
-    pass
-
 if __name__ == '__main__':
+    try:
+        input = raw_input
+    except NameError:
+        pass
+
     puzzle = create_random_eight_puzzle(25)
     print('A random puzzle:')
     print(puzzle)
@@ -282,6 +281,7 @@ if __name__ == '__main__':
 
     curr = puzzle
     i = 1
+
     for a in path:
         curr = curr.result(a)
         print('After %d move%s: %s' % (i, ("", "s")[i > 1], a))
