@@ -337,7 +337,7 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         self.walls = game_state.get_walls()
         self.start_state = game_state.get_pacman_position()
         self.cost_function = lambda x: 1
-        self._visited, self._visitedlist, self._expanded = {}, [], 0
+        self._visited, self._visited_list, self._expanded = {}, [], 0
 
     def is_goal_state(self, state):
         x, y = state
