@@ -137,7 +137,7 @@ class Layout:
 
 
 def get_layout(name, back=2):
-    logging.info("Board Layout Name: " + name)
+    logging.debug("Board Layout Name: " + name)
 
     if name.endswith('.lay'):
         layout = load_layout('layouts/' + name)
@@ -154,7 +154,7 @@ def get_layout(name, back=2):
         layout = get_layout(name, back - 1)
         os.chdir(current_directory)
 
-    logging.info("Board Layout:\n%s" % layout)
+    logging.debug("Board Layout:\n%s" % layout)
 
     return layout
 
