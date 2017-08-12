@@ -12,19 +12,19 @@ class MarkovDecisionProcess:
         Returns a list of all states in the MDP. Note that this is not
         generally possible for large MDPs.
         """
-        utilities.raise_not_defined()
+        utilities.abstract()
 
     def get_start_state(self):
         """
         Returns the start state of the MDP.
         """
-        utilities.raise_not_defined()
+        utilities.abstract()
 
     def get_possible_actions(self, state):
         """
         Returns a list of possible actions from the current state.
         """
-        utilities.raise_not_defined()
+        utilities.abstract()
 
     def get_transition_states_and_probs(self, state, action):
         """
@@ -35,7 +35,7 @@ class MarkovDecisionProcess:
         Note that in Q-Learning and reinforcement learning in general, we
         won't know these probabilities nor do we directly model them.
         """
-        utilities.raise_not_defined()
+        utilities.abstract()
 
     def get_reward(self, state, action, next_state):
         """
@@ -43,7 +43,7 @@ class MarkovDecisionProcess:
 
         Note that this is not available in reinforcement learning.
         """
-        utilities.raise_not_defined()
+        utilities.abstract()
 
     def is_terminal(self, state):
         """
@@ -55,4 +55,4 @@ class MarkovDecisionProcess:
         self-loop action 'pass' with zero reward. Those formulations are
         essentially equivalent.
         """
-        utilities.raise_not_defined()
+        utilities.abstract()

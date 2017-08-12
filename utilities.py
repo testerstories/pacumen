@@ -278,6 +278,12 @@ def raise_not_defined():
     sys.exit(1)
 
 
+def abstract():
+    import inspect
+    caller = inspect.getouterframes(inspect.currentframe())[1][3]
+    raise NotImplementedError(caller + ' must be implemented in subclass')
+
+
 def normalize(vector_or_counter):
     normalized_counter = Counter()
 

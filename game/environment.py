@@ -11,27 +11,27 @@ class Environment:
         """
         Returns the current state of enviornment
         """
-        utilities.raise_not_defined()
+        utilities.abstract()
 
     def get_possible_actions(self, state):
         """
         Returns possible actions the agent can take in the given state.
         Can return the empty list if we are in a terminal state.
         """
-        utilities.raise_not_defined()
+        utilities.abstract()
 
     def do_action(self, action):
         """
         Performs the given action in the current environment state and
         updates the environment. Returns a (reward, next_state) pair.
         """
-        utilities.raise_not_defined()
+        utilities.abstract()
 
     def reset(self):
         """
         Resets the current state to the start state.
         """
-        utilities.raise_not_defined()
+        utilities.abstract()
 
     def is_terminal(self):
         """
