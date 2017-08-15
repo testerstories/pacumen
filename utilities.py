@@ -103,6 +103,9 @@ class FixedRandom:
 
 
 class Stack:
+    """
+    A container with a last-in-first-out (LIFO) queuing policy.
+    """
     def __init__(self):
         self.list = []
 
@@ -117,6 +120,9 @@ class Stack:
 
 
 class Queue:
+    """
+    A container with a first-in-first-out (FIFO) queuing policy.
+    """
     def __init__(self):
         self.list = []
 
@@ -131,6 +137,11 @@ class Queue:
 
 
 class PriorityQueue:
+    """
+    Works just like a queue, but each inserted item has a priority associated
+    with it and anything using this approach is usually interested in quick
+    retrieval of the lowest-priority item in the queue.
+    """
     def __init__(self):
         self.heap = []
         self.count = 0
@@ -161,6 +172,11 @@ class PriorityQueue:
 
 
 class PriorityQueueWithFunction(PriorityQueue):
+    """
+    Implements a priority queue with the same push/pop signature of the
+    Queue and the Stack classes. This class is designed for drop-in
+    replacement for those two classes.
+    """
     def __init__(self, priority_function):
         # priorityFunction (item) -> priority"
         self.priority_function = priority_function
@@ -171,10 +187,22 @@ class PriorityQueueWithFunction(PriorityQueue):
 
 
 def manhattan_distance(xy1, xy2):
+    """
+    Returns the Manhattan distance between points xy1 and xy2. The Manhattan
+    distance refers to the distance between two points on a grid based on a
+    strictly horizontal and/or vertical path, as opposed to the diagonal
+    distance.
+    """
     return abs(xy1[0] - xy2[0]) + abs(xy1[1] - xy2[1])
 
 
 class Counter(dict):
+    """
+    This class is an extension of the standard Python dictionary type. This
+    extension is specialized to have number values (integers or floats), and
+    includes a handful of additional functions to ease the task of counting
+    data.
+    """
     def __getitem__(self, idx):
         self.setdefault(idx, 0)
         return dict.__getitem__(self, idx)
@@ -285,6 +313,10 @@ def abstract():
 
 
 def normalize(vector_or_counter):
+    """
+    Normalizes a vector or counter by dividing each value by the sum of all
+    of the values.
+    """
     normalized_counter = Counter()
 
     if type(vector_or_counter) == type(normalized_counter):
@@ -509,9 +541,7 @@ def mute_print():
     _MUTED = True
 
     _ORIGINAL_STDOUT = sys.stdout
-    # _ORIGINAL_STDERR = sys.stderr
     sys.stdout = WritableNull()
-    # sys.stderr = WritableNull()
 
 
 def unmute_print():
@@ -523,4 +553,3 @@ def unmute_print():
     _MUTED = False
 
     sys.stdout = _ORIGINAL_STDOUT
-    # sys.stderr = _ORIGINAL_STDERR
