@@ -274,16 +274,15 @@ _got_release = None
 
 def _keypress(event):
     global _got_release
-    # remap_arrows(event)
+
     _keysdown[event.keysym] = 1
     _keyswaiting[event.keysym] = 1
-    # print event.char, event.keycode
     _got_release = None
 
 
 def _keyrelease(event):
     global _got_release
-    # remap_arrows(event)
+
     try:
         del _keysdown[event.keysym]
     except:
@@ -316,31 +315,37 @@ def _clear_keys(event=None):
     _got_release = None
 
 
-def keys_pressed(d_o_e=lambda arg: _root_window.dooneevent(arg), d_w=tkDisplay._tkinter.DONT_WAIT):
-    d_o_e(d_w)
+def keys_pressed(d_o_e=None, d_w=tkDisplay._tkinter.DONT_WAIT):
+    if d_o_e is None:
+        d_o_e = _root_window.dooneevent
+
     if _got_release:
         d_o_e(d_w)
+
     return list(_keysdown.keys())
 
 
 def keys_waiting():
     global _keyswaiting
-    keys = _keyswaiting.keys()
+    keys = list(_keyswaiting.keys())
     _keyswaiting = {}
-    return list(keys)
+    return keys
 
 
 def wait_for_keys():
     keys = []
 
-    while keys == []:
+    while not keys:
         keys = keys_pressed()
         sleep(0.05)
 
     return keys
 
 
-def remove_from_screen(x, d_o_e=lambda arg: _root_window.dooneevent(arg), d_w=tkDisplay._tkinter.DONT_WAIT):
+def remove_from_screen(x, d_o_e=None, d_w=tkDisplay._tkinter.DONT_WAIT):
+    if d_o_e is None:
+        d_o_e = _root_window.dooneevent
+
     _canvas.delete(x)
     d_o_e(d_w)
 
@@ -353,7 +358,10 @@ def _adjust_coords(coord_list, x, y):
     return coord_list
 
 
-def move_to(object, x, y=None, d_o_e=lambda arg: _root_window.dooneevent(arg), d_w=tkDisplay._tkinter.DONT_WAIT):
+def move_to(object, x, y=None, d_o_e=None, d_w=tkDisplay._tkinter.DONT_WAIT):
+    if d_o_e is None:
+        d_o_e = _root_window.dooneevent
+
     if y is None:
         try:
             x, y = x
@@ -379,7 +387,10 @@ def move_to(object, x, y=None, d_o_e=lambda arg: _root_window.dooneevent(arg), d
     d_o_e(d_w)
 
 
-def move_by(object, x, y=None, d_o_e=lambda arg: _root_window.dooneevent(arg), d_w=tkDisplay._tkinter.DONT_WAIT, lift=False):
+def move_by(object, x, y=None, d_o_e=None, d_w=tkDisplay._tkinter.DONT_WAIT, lift=False):
+    if d_o_e is None:
+        d_o_e = _root_window.dooneevent
+
     if y is None:
         try:
             x, y = x
@@ -411,9 +422,9 @@ def write_postscript(filename):
     """
     Writes the current canvas to a postscript file.
     """
-    psfile = open(filename, 'w')
-    psfile.write(_canvas.postscript(pageanchor='sw', y='0.c', x='0.c'))
-    psfile.close()
+    ps_file = open(filename, 'w')
+    ps_file.write(_canvas.postscript(pageanchor='sw', y='0.c', x='0.c'))
+    ps_file.close()
 
 ghost_shape = [
     (0, - 0.5),
