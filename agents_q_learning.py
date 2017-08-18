@@ -38,11 +38,11 @@ class QLearningAgent(ReinforcementAgent):
 
 
 class PacmanQAgent(QLearningAgent):
-    def __init__(self, epsilon=0.05, gamma=0.8, alpha=0.2, num_training=0, **args):
+    def __init__(self, epsilon=0.05, gamma=0.8, alpha=0.2, numTraining=0, **args):
         args['epsilon'] = epsilon
         args['gamma'] = gamma
         args['alpha'] = alpha
-        args['num_training'] = num_training
+        args['num_training'] = numTraining
         self.index = 0
         QLearningAgent.__init__(self, **args)
 

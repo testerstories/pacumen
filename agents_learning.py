@@ -7,11 +7,11 @@ import utilities
 
 
 class ValueEstimationAgent(Agent):
-    def __init__(self, alpha=1.0, epsilon=0.05, gamma=0.8, num_training=10):
+    def __init__(self, alpha=1.0, epsilon=0.05, gamma=0.8, numTraining=10):
         self.alpha = float(alpha)
         self.epsilon = float(epsilon)
         self.discount = float(gamma)
-        self.num_training = int(num_training)
+        self.num_training = int(numTraining)
 
     def get_q_value(self, state, action):
         utilities.raise_not_defined()
@@ -27,7 +27,7 @@ class ValueEstimationAgent(Agent):
 
 
 class ReinforcementAgent(ValueEstimationAgent):
-    def __init__(self, action_fn=None, num_training=100, epsilon=0.5, alpha=0.5, gamma=1):
+    def __init__(self, action_fn=None, numTraining=100, epsilon=0.5, alpha=0.5, gamma=1):
         if action_fn is None:
             action_fn = lambda state: state.get_legal_actions()
 
@@ -35,7 +35,7 @@ class ReinforcementAgent(ValueEstimationAgent):
         self.episodes_so_far = 0
         self.accum_train_rewards = 0.0
         self.accum_test_rewards = 0.0
-        self.num_training = int(num_training)
+        self.num_training = int(numTraining)
         self.epsilon = float(epsilon)
         self.alpha = float(alpha)
         self.discount = float(gamma)
