@@ -525,11 +525,11 @@ if __name__ == '__main__':
         a = ValueIterationAgent(mdp, opts.discount, opts.iters)
     elif opts.agent == 'q':
         grid_world_env = GridWorldEnvironment(mdp)
-        action_function = lambda state: mdp.get_possible_actions(state)
+        actionFn = lambda state: mdp.get_possible_actions(state)
         qLearnOpts = {'gamma': opts.discount,
                       'alpha': opts.learningRate,
                       'epsilon': opts.epsilon,
-                      'actionFn': action_function}
+                      'actionFn': actionFn}
         a = QLearningAgent(**qLearnOpts)
     elif opts.agent == 'random':
         # # No reason to use the random agent without episodes

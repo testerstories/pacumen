@@ -27,11 +27,11 @@ class ValueEstimationAgent(Agent):
 
 
 class ReinforcementAgent(ValueEstimationAgent):
-    def __init__(self, action_fn=None, numTraining=100, epsilon=0.5, alpha=0.5, gamma=1):
-        if action_fn is None:
-            action_fn = lambda state: state.get_legal_actions()
+    def __init__(self, actionFn=None, numTraining=100, epsilon=0.5, alpha=0.5, gamma=1):
+        if actionFn is None:
+            actionFn = lambda state: state.get_legal_actions()
 
-        self.action_fn = action_fn
+        self.actionFn = actionFn
         self.episodes_so_far = 0
         self.accum_train_rewards = 0.0
         self.accum_test_rewards = 0.0
@@ -44,7 +44,7 @@ class ReinforcementAgent(ValueEstimationAgent):
         utilities.raise_not_defined()
 
     def get_legal_actions(self, state):
-        return self.action_fn(state)
+        return self.actionFn(state)
 
     def observe_transition(self, state, action, next_state, delta_reward):
         self.episode_rewards += delta_reward

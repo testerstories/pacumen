@@ -23,9 +23,6 @@ class Application:
 
     def increment_speed(self, inc):
         self.tick_time *= inc
-        # self.epsilon = min(1.0, self.epsilon)
-        # self.epsilon = max(0.0,self.epsilon)
-        # self.learner.setSpeed(self.epsilon)
         self.speed_label['text'] = 'Step Delay: %.5f' % self.tick_time
 
     def increment_epsilon(self, inc):
@@ -136,8 +133,8 @@ class Application:
             raise ValueError("Unknown RobotType")
 
         # Init Agent
-        action_fn = lambda state: self.robot_environment.get_possible_actions(state)
-        self.learner = agents_q_learning.QLearningAgent(action_fn=action_fn)
+        actionFn = lambda state: self.robot_environment.get_possible_actions(state)
+        self.learner = agents_q_learning.QLearningAgent(actionFn=actionFn)
 
         self.learner.set_epsilon(self.epsilon)
         self.learner.set_learning_rate(self.alpha)
