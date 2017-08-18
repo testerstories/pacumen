@@ -212,17 +212,17 @@ class Counter(dict):
             self[key] += count
 
     def arg_max(self):
-        if len(self.keys()) == 0:
+        if len(list(self.keys())) == 0:
             return None
 
-        all_items = self.items()
+        all_items = list(self.items())
         values = [x[1] for x in all_items]
         max_index = values.index(max(values))
 
         return all_items[max_index][0]
 
     def sorted_keys(self):
-        sorted_items = self.items()
+        sorted_items = list(self.items())
         compare = lambda x, y: sign(y[1] - x[1])
         sorted_items.sort(cmp=compare)
         return [x[0] for x in sorted_items]
@@ -236,11 +236,12 @@ class Counter(dict):
         if total == 0:
             return
 
-        for key in self.keys():
+        for key in list(self.keys()):
             self[key] = self[key] / total
 
     def divide_all(self, divisor):
         divisor = float(divisor)
+
         for key in self:
             self[key] /= divisor
 
@@ -262,7 +263,7 @@ class Counter(dict):
         return sum_value
 
     def __radd__(self, y):
-        for key, value in y.items():
+        for key, value in list(y.items()):
             self[key] += value
 
     def __add__(self, y):
@@ -325,7 +326,7 @@ def normalize(vector_or_counter):
         if total == 0:
             return counter
 
-        for key in counter.keys():
+        for key in list(counter.keys()):
             value = counter[key]
             normalized_counter[key] = value / total
 
@@ -454,9 +455,9 @@ def lookup(name, namespace):
         module = __import__(module_name)
         return getattr(module, object_name)
     else:
-        modules = [obj for obj in namespace.values() if str(type(obj)) == "<type 'module'>"]
+        modules = [obj for obj in list(namespace.values()) if str(type(obj)) == "<type 'module'>"]
         options = [getattr(module, name) for module in modules if name in dir(module)]
-        options += [obj[1] for obj in namespace.items() if obj[0] == name]
+        options += [obj[1] for obj in list(namespace.items()) if obj[0] == name]
 
         if len(options) == 1:
             return options[0]
