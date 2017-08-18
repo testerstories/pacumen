@@ -11,7 +11,7 @@ class ValueEstimationAgent(Agent):
         self.alpha = float(alpha)
         self.epsilon = float(epsilon)
         self.discount = float(gamma)
-        self.num_training = int(numTraining)
+        self.numTraining = int(numTraining)
 
     def get_q_value(self, state, action):
         utilities.raise_not_defined()
@@ -35,7 +35,7 @@ class ReinforcementAgent(ValueEstimationAgent):
         self.episodes_so_far = 0
         self.accum_train_rewards = 0.0
         self.accum_test_rewards = 0.0
-        self.num_training = int(numTraining)
+        self.numTraining = int(numTraining)
         self.epsilon = float(epsilon)
         self.alpha = float(alpha)
         self.discount = float(gamma)
@@ -56,20 +56,20 @@ class ReinforcementAgent(ValueEstimationAgent):
         self.episode_rewards = 0.0
 
     def stop_episode(self):
-        if self.episodes_so_far < self.num_training:
+        if self.episodes_so_far < self.numTraining:
             self.accum_train_rewards += self.episode_rewards
         else:
             self.accum_test_rewards += self.episode_rewards
 
         self.episodes_so_far += 1
 
-        if self.episodes_so_far >= self.num_training:
+        if self.episodes_so_far >= self.numTraining:
             # No exploration, no learning.
             self.epsilon = 0.0
             self.alpha = 0.0
 
     def is_in_training(self):
-        return self.episodes_so_far < self.num_training
+        return self.episodes_so_far < self.numTraining
 
     def is_in_testing(self):
         return not self.is_in_training()
@@ -97,7 +97,7 @@ class ReinforcementAgent(ValueEstimationAgent):
     def register_initial_state(self, state):
         self.start_episode()
         if self.episodes_so_far == 0:
-            print('Beginning %d episodes of Training' % self.num_training)
+            print('Beginning %d episodes of Training' % self.numTraining)
 
     def final(self, state):
         delta_reward = state.get_score() - self.last_state.get_score()
@@ -118,13 +118,13 @@ class ReinforcementAgent(ValueEstimationAgent):
             print('Reinforcement Learning Status:')
             window_avg = self.last_window_accum_rewards / float(NUM_EPS_UPDATE)
 
-            if self.episodes_so_far <= self.num_training:
+            if self.episodes_so_far <= self.numTraining:
                 train_avg = self.accum_train_rewards / float(self.episodes_so_far)
-                print('\tCompleted %d out of %d training episodes' % (self.episodes_so_far, self.num_training))
+                print('\tCompleted %d out of %d training episodes' % (self.episodes_so_far, self.numTraining))
                 print('\tAverage Rewards over all training: %.2f' % train_avg)
             else:
-                test_avg = float(self.accum_test_rewards) / (self.episodes_so_far - self.num_training)
-                print('\tCompleted %d test episodes' % (self.episodes_so_far - self.num_training))
+                test_avg = float(self.accum_test_rewards) / (self.episodes_so_far - self.numTraining)
+                print('\tCompleted %d test episodes' % (self.episodes_so_far - self.numTraining))
                 print('\tAverage Rewards over testing: %.2f' % test_avg)
 
             print('\tAverage Rewards for last %d episodes: %.2f' % (NUM_EPS_UPDATE, window_avg))
@@ -133,6 +133,6 @@ class ReinforcementAgent(ValueEstimationAgent):
             self.last_window_accum_rewards = 0.0
             self.episode_start_time = time.time()
 
-        if self.episodes_so_far == self.num_training:
+        if self.episodes_so_far == self.numTraining:
             msg = 'Training Done (turning off epsilon and alpha)'
             print('%s\n%s' % (msg, '-' * len(msg)))

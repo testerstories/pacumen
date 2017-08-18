@@ -13,10 +13,10 @@ class QLearningAgent(ReinforcementAgent):
     def get_q_value(self, state, action):
         utilities.raise_not_defined()
 
-    def compute_value_from_qvalues(self, state):
+    def compute_value_from_q_values(self, state):
         utilities.raise_not_defined()
 
-    def compute_action_from_qvalues(self, state):
+    def compute_action_from_q_values(self, state):
         utilities.raise_not_defined()
 
     def get_action(self, state):
@@ -31,10 +31,10 @@ class QLearningAgent(ReinforcementAgent):
         utilities.raise_not_defined()
 
     def get_policy(self, state):
-        return self.compute_action_from_qvalues(state)
+        return self.compute_action_from_q_values(state)
 
     def get_value(self, state):
-        return self.compute_value_from_qvalues(state)
+        return self.compute_value_from_q_values(state)
 
 
 class PacmanQAgent(QLearningAgent):
@@ -42,7 +42,7 @@ class PacmanQAgent(QLearningAgent):
         args['epsilon'] = epsilon
         args['gamma'] = gamma
         args['alpha'] = alpha
-        args['num_training'] = numTraining
+        args['numTraining'] = numTraining
         self.index = 0
         QLearningAgent.__init__(self, **args)
 
@@ -70,6 +70,6 @@ class ApproximateQAgent(PacmanQAgent):
     def final(self, state):
         PacmanQAgent.final(self, state)
 
-        if self.episodes_so_far == self.num_training:
+        if self.episodes_so_far == self.numTraining:
             "*** YOUR CODE HERE ***"
             pass
