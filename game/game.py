@@ -178,9 +178,6 @@ class Game:
 
                     self.total_agent_times[agent_index] += move_time
 
-                    logging.debug("Agent: %d, time: %f, total: %f" %
-                                  (agent_index, move_time, self.total_agent_times[agent_index]))
-
                     if self.total_agent_times[agent_index] > self.rules.get_max_total_time(agent_index):
                         sys.stderr.write("Agent %d ran out of time! (time: %1.2f)\n" %
                                          (agent_index, self.total_agent_times[agent_index]))
