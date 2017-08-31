@@ -211,20 +211,27 @@ class Counter(dict):
         for key in keys:
             self[key] += count
 
-    def arg_max(self):
+    def arg_max(self, all_max=False):
         if len(list(self.keys())) == 0:
             return None
 
         all_items = list(self.items())
         values = [x[1] for x in all_items]
-        max_index = values.index(max(values))
 
-        return all_items[max_index][0]
+        # max_index = values.index(max(values))
+        max_value = max(values)
+
+        if all_max:
+            max_values = [action[0] for action in all_items if action[1] == max_value]
+            return max_values
+
+        # return all_items[max_index][0]
+        return all_items[values.index(max_value)][0]
 
     def sorted_keys(self):
         sorted_items = list(self.items())
         compare = lambda x, y: sign(y[1] - x[1])
-        sorted_items.sort(cmp=compare)
+        sorted_items.sort(key=compare)
         return [x[0] for x in sorted_items]
 
     def total_count(self):
