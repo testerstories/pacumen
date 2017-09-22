@@ -1,6 +1,6 @@
 from __future__ import print_function
 
-import pacman
+import pacumen
 import time
 
 DRAW_EVERY = 1
@@ -51,9 +51,9 @@ class PacmanDisplay:
         if self.agent_counter == 0:
             self.turn += 1
             if DISPLAY_MOVES:
-                ghosts = [pacman.nearest_point(state.agent_states[i].get_position()) for i in range(1, num_agents)]
+                ghosts = [pacumen.nearest_point(state.agent_states[i].get_position()) for i in range(1, num_agents)]
                 print("%4d) P: %-8s" %
-                      (self.turn, str(pacman.nearest_point(state.agent_states[0].get_position()))),
+                      (self.turn, str(pacumen.nearest_point(state.agent_states[0].get_position()))),
                       '| Score: %-5d' % state.score, '| Ghosts:', ghosts)
 
             if self.turn % DRAW_EVERY == 0:
