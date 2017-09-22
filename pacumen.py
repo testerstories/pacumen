@@ -47,12 +47,12 @@ def process_commands(argv):
         epilog=textwrap.dedent(
             """
             USAGE:
-                python pacman.py <options>
+                python pacumen.py <options>
                 
             EXAMPLES:
-                (1) python pacman.py
+                (1) python pacumen.py
                     - starts an interactive game
-                (2) python pacman.py --layout small_classic --zoom 2
+                (2) python pacumen.py --layout small_classic --zoom 2
                     - starts an interactive game on a smaller board, zoomed in
             """
         )
